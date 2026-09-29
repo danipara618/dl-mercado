@@ -1,0 +1,35 @@
+{
+  "name": "dl-mercado",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DL Mercado — Dashboard financiero argentino (Economía y Finanzas)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lucide-react": "^1.48.0",
+    "next": "^15.5.26",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-is": "^19.3.0",
+    "recharts": "^2.15.4",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "react-is": "^19.3.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
