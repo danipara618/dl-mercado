@@ -1,0 +1,3 @@
+import Header from "@/components/Header";import Footer from "@/components/Footer";import SectionTitle from "@/components/SectionTitle";import RentCalculator from "@/components/calculators/RentCalculator";
+export const metadata={title:"Calculadora de alquiler | DL Mercado",description:"Calculá actualizaciones de alquiler por IPC o porcentaje pactado."};
+export default function Page(){return <><Header/><main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8"><SectionTitle as="h1" title="Calculadora de alquiler" subtitle="Actualizá un alquiler por IPC acumulado o por el porcentaje previsto en tu contrato."/><RentCalculator/></main><Footer/></>}
