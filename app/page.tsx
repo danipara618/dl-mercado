@@ -9,6 +9,8 @@ import BondsSection from "@/components/BondsSection";
 import PesosSection from "@/components/PesosSection";
 import EquitySection from "@/components/EquitySection";
 import GlobalMarkets from "@/components/GlobalMarkets";
+import EducationBlock from "@/components/EducationBlock";
+import HomeAbout from "@/components/HomeAbout";
 
 // ISR: la fecha del encabezado se regenera cada 10 minutos; los datos se cargan en el cliente.
 export const revalidate = 600;
@@ -68,6 +70,9 @@ export default function Home() {
             <Link href="/calculadoras/alquiler" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40"><div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div><h3 className="mt-6 font-serif text-2xl">Alquiler</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Calculá una actualización por IPC acumulado o por el porcentaje pactado en el contrato.</p></Link><Link href="/calculadoras/nodocente" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40"><div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div><h3 className="mt-6 font-serif text-2xl">Salario No-docente</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Simulá la liquidación CCT 366/06 y analizá la evolución del poder adquisitivo.</p></Link>
           </div>
         </section>
+
+        <EducationBlock />
+        <HomeAbout />
       </main>
       <Footer />
     </>
