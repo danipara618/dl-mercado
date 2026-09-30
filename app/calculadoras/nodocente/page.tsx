@@ -1,0 +1,3 @@
+import Header from "@/components/Header";import Footer from "@/components/Footer";import SectionTitle from "@/components/SectionTitle";import NodocenteCalculator from "@/components/calculators/NodocenteCalculator";
+export const metadata={title:"Calculadora salarial No-docente | DL Mercado",description:"Simulador salarial nodocente CCT 366/06 con auditoría de poder adquisitivo."};
+export default function Page(){return <><Header/><main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8"><SectionTitle as="h1" title="Calculadora salarial No-docente" subtitle="Estimá tu liquidación bajo CCT 366/06 y analizá la evolución del poder adquisitivo."/><NodocenteCalculator/></main><Footer/></>}
