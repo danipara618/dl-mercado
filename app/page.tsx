@@ -57,15 +57,15 @@ export default function Home() {
               <p className="mt-5 text-xs font-extrabold uppercase tracking-wider text-oliva">Calcular con IPC</p>
             </Link>
 
-            <div className="rounded-2xl border border-dashed border-crema-200 p-6 text-tinta/55">
-              <span className="inline-block rounded-xl bg-crema-200/60 p-3">
-                <Calculator size={24} />
-              </span>
-              <h3 className="mt-6 font-serif text-2xl text-tinta/70">Más calculadoras</h3>
-              <p className="mt-2 max-w-md text-sm leading-relaxed">
-                Alquiler, interés compuesto, salario no-docente y retiro se incorporarán sobre la misma base de datos de DL Mercado.
-              </p>
-            </div>
+            <Link href="/calculadoras/interes-compuesto" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40">
+              <div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div>
+              <h3 className="mt-6 font-serif text-2xl">Interés compuesto</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Proyectá capital y aportes mensuales, incluyendo el resultado en poder adquisitivo real.</p>
+            </Link>
+            <Link href="/calculadoras/retiro" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40">
+              <div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div>
+              <h3 className="mt-6 font-serif text-2xl">Retiro</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Estimá tu capital futuro en USD y comparalo contra un objetivo expresado en dinero de hoy.</p>
+            </Link>
+            <div className="rounded-2xl border border-dashed border-crema-200 p-6 text-tinta/55"><span className="inline-block rounded-xl bg-crema-200/60 p-3"><Calculator size={24}/></span><h3 className="mt-6 font-serif text-2xl text-tinta/70">Próximamente</h3><p className="mt-2 text-sm">Alquiler y salario no-docente.</p></div>
           </div>
         </section>
       </main>
