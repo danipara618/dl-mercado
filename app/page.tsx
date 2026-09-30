@@ -28,7 +28,7 @@ export default function Home() {
           <RiskChart />
         </section>
 
-        <BondsSection />
+        <div id="macro"><BondsSection /></div>
         <PesosSection />
         <EquitySection />
         <GlobalMarkets />
