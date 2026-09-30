@@ -1,0 +1,3 @@
+import Header from "@/components/Header"; import Footer from "@/components/Footer"; import SectionTitle from "@/components/SectionTitle"; import CompoundInterestCalculator from "@/components/calculators/CompoundInterestCalculator";
+export const metadata={title:"Interés compuesto | DL Mercado",description:"Simulá capital, aportes y rendimiento nominal y real."};
+export default function Page(){return <><Header/><main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8"><SectionTitle as="h1" title="Interés compuesto" subtitle="Proyectá tus aportes y compará el resultado nominal con su valor real descontando inflación."/><CompoundInterestCalculator/></main><Footer/></>}
