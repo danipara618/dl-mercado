@@ -1,0 +1,1 @@
+export const SITE_URL=process.env.NEXT_PUBLIC_SITE_URL??(process.env.VERCEL_PROJECT_PRODUCTION_URL?`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`:"http://localhost:3000");export const AUTOR={nombre:"Daniel Lezcano",rol:"Economista (UNDAV) · Analista de datos",perfil:"/sobre-mi"};
