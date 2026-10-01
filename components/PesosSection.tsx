@@ -8,6 +8,7 @@ import { useApi } from "@/lib/useApi";
 import { clasificar, diasAlVencimiento, vencimientoPorTicker, type TipoPesos } from "@/lib/letras";
 import { fmtCompact, fmtNum } from "@/lib/format";
 import type { Cotizacion } from "@/lib/types";
+import LecapSimulator from "./LecapSimulator";
 
 interface Fila extends Cotizacion {
   tipo: TipoPesos;
@@ -89,6 +90,7 @@ export default function PesosSection() {
         fuente="data912.com"
         caption="Renta fija en pesos"
       />
+      {(filtro === "LECAP" || filtro === "BONCAP") && <LecapSimulator />}
     </section>
   );
 }
