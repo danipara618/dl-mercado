@@ -54,7 +54,7 @@ export default function DataTable<T>({
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse text-sm">
+        <table className="w-full table-fixed border-collapse text-xs sm:text-sm">
           {caption && <caption className="sr-only">{caption}</caption>}
           <thead className="bg-crema-50">
             <tr className="border-b border-crema-200">
@@ -65,7 +65,7 @@ export default function DataTable<T>({
                     key={c.key}
                     scope="col"
                     aria-sort={activo ? (sort!.dir === "asc" ? "ascending" : "descending") : undefined}
-                    className={`whitespace-nowrap px-4 py-3 text-xs font-bold text-oliva ${alinear(c.align)}`}
+                    className={`px-2 py-3 text-[11px] font-bold text-oliva sm:px-3 sm:text-xs ${alinear(c.align)}`}
                   >
                     {c.sortValue ? (
                       <button
@@ -92,7 +92,7 @@ export default function DataTable<T>({
               ? Array.from({ length: 6 }).map((_, i) => (
                   <tr key={i} className="even:bg-crema-50/60">
                     {columns.map((c) => (
-                      <td key={c.key} className="px-4 py-3">
+                      <td key={c.key} className="px-2 py-3 sm:px-3">
                         <Skeleton className="h-4 w-full max-w-[90px]" />
                       </td>
                     ))}
@@ -101,7 +101,7 @@ export default function DataTable<T>({
               : visibles.map((r) => (
                   <tr key={rowKey(r)} className="border-b border-crema-200/60 last:border-0 even:bg-crema-50/60 hover:bg-oliva-100/40">
                     {columns.map((c) => (
-                      <td key={c.key} className={`whitespace-nowrap px-4 py-2.5 ${alinear(c.align)} ${c.className ?? ""}`}>
+                      <td key={c.key} className={`overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2.5 sm:px-3 ${alinear(c.align)} ${c.className ?? ""}`}>
                         {c.render(r)}
                       </td>
                     ))}
