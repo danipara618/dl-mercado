@@ -35,10 +35,10 @@ export default function GlobalMarkets() {
   return (
     <section aria-labelledby="global">
       <SectionTitle id="global" title="Mercados globales" subtitle="Índices, tasas del Tesoro, monedas, commodities, cripto y ADRs argentinos." />
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid items-start gap-5 lg:grid-cols-2">
         {Object.keys(GRUPOS_GLOBALES).map((grupo) => (
-          <div key={grupo}>
-            <h3 className="mb-3 text-sm font-bold text-oliva">{grupo}</h3>
+          <article key={grupo} className="min-w-0 overflow-hidden rounded-2xl border border-crema-200 bg-white p-4 shadow-sm">
+            <h3 className="mb-3 border-b border-crema-200 pb-3 font-serif text-xl text-tinta">{grupo}</h3>
             <DataTable
               columns={cols}
               rows={(data ?? []).filter((q) => q.grupo === grupo)}
@@ -48,7 +48,7 @@ export default function GlobalMarkets() {
               error={error}
               fuente="Yahoo Finance"
             />
-          </div>
+          </article>
         ))}
       </div>
     </section>
