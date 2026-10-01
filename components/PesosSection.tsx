@@ -6,7 +6,7 @@ import DataTable, { type Column } from "./DataTable";
 import Change from "./Change";
 import { useApi } from "@/lib/useApi";
 import { clasificar, diasAlVencimiento, vencimientoPorTicker, type TipoPesos } from "@/lib/letras";
-import { fmtCompact, fmtFecha, fmtNum } from "@/lib/format";
+import { fmtCompact, fmtNum } from "@/lib/format";
 import type { Cotizacion } from "@/lib/types";
 
 interface Fila extends Cotizacion {
@@ -44,8 +44,6 @@ export default function PesosSection() {
   const cols: Column<Fila>[] = [
     { key: "s", header: "Especie", render: (r) => <span className="font-semibold">{r.symbol}</span>, sortValue: (r) => r.symbol },
     { key: "tipo", header: "Tipo", render: (r) => <span className="rounded-md bg-oliva-100 px-2 py-0.5 text-xs font-semibold text-oliva">{r.tipo}</span>, sortValue: (r) => r.tipo },
-    { key: "vto", header: "Vencimiento", render: (r) => <span className="font-mono">{r.vto ? fmtFecha(r.vto) : "—"}</span>, sortValue: (r) => r.vto?.getTime() ?? null },
-    { key: "d", header: "Días", align: "right", render: (r) => <span className="font-mono tabular">{r.dias ?? "—"}</span>, sortValue: (r) => r.dias },
     { key: "p", header: "Precio (ARS)", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.last, 2)}</span>, sortValue: (r) => r.last },
     { key: "b", header: "Compra", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.bid, 2)}</span> },
     { key: "a", header: "Venta", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.ask, 2)}</span> },
@@ -79,11 +77,12 @@ export default function PesosSection() {
           </div>
         }
       />
+      <p className="mb-4 text-sm text-tinta/60">Para mantener el panel simple, acá mostramos cotización y liquidez. El cálculo de vencimiento y rendimiento queda en el simulador de LECAP/BONCAP.</p>
       <DataTable
         columns={cols}
         rows={cargando ? [] : visibles}
         rowKey={(r) => r.symbol}
-        initialSort={{ key: "vto", dir: "asc" }}
+        initialSort={{ key: "vol", dir: "desc" }}
         pageSize={15}
         loading={cargando}
         error={notas.error ?? bonos.error}
