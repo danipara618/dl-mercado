@@ -11,6 +11,7 @@ import EquitySection from "@/components/EquitySection";
 import GlobalMarkets from "@/components/GlobalMarkets";
 import EducationBlock from "@/components/EducationBlock";
 import HomeAbout from "@/components/HomeAbout";
+import MacroDashboard from "@/components/MacroDashboard";
 
 // ISR: la fecha del encabezado se regenera cada 10 minutos; los datos se cargan en el cliente.
 export const revalidate = 600;
@@ -30,7 +31,8 @@ export default function Home() {
           <RiskChart />
         </section>
 
-        <div id="macro"><BondsSection /></div>
+        <div id="macro"><MacroDashboard /></div>
+        <BondsSection />
         <PesosSection />
         <EquitySection />
         <GlobalMarkets />
