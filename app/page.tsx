@@ -20,18 +20,21 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-7xl space-y-16 px-4 pb-16 sm:px-6 lg:px-8">
-        <section aria-labelledby="kpis">
-          <SectionTitle id="kpis" title="Indicadores clave" subtitle="Tipo de cambio, riesgo soberano e índices de ajuste" />
+      <main className="mx-auto max-w-7xl space-y-20 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+        <section id="mercado" aria-labelledby="kpis">
+          <SectionTitle id="kpis" title="Data de mercado" subtitle="Una lectura rápida del dólar, riesgo soberano, índices y tasas." />
           <KPIGrid />
         </section>
 
-        <section aria-labelledby="riesgo">
-          <SectionTitle id="riesgo" title="Riesgo país" subtitle="Spread del EMBI Argentina sobre Treasuries, en puntos básicos" />
+        <section aria-labelledby="riesgo" className="rounded-3xl border border-crema-200 bg-crema-50/60 p-4 sm:p-6">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+            <div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-oliva">Pulso soberano</p><h2 id="riesgo" className="mt-1 font-serif text-3xl">Riesgo país</h2></div>
+            <p className="max-w-md text-sm text-tinta/55">Evolución del spread EMBI Argentina, con máximos, mínimos y variación del período.</p>
+          </div>
           <RiskChart />
         </section>
 
-        <div id="macro"><MacroDashboard /></div>
+        <div id="macro" className="scroll-mt-6"><MacroDashboard /></div>
         <BondsSection />
         <PesosSection />
         <EquitySection />
