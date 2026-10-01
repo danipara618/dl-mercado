@@ -39,3 +39,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Inputs de calculadoras: sin spinners nativos y selección limpia */
+.calc-number{appearance:textfield;-moz-appearance:textfield}
+.calc-number::-webkit-inner-spin-button,.calc-number::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
