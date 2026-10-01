@@ -1,73 +1,9 @@
-"use client";
-// Renta variable y corporativos: acciones BYMA, CEDEARs y obligaciones negociables
-import { useState } from "react";
-import SectionTitle from "./SectionTitle";
-import DataTable, { type Column } from "./DataTable";
-import Change from "./Change";
-import { useApi } from "@/lib/useApi";
-import { fmtCompact, fmtNum } from "@/lib/format";
-import type { Cotizacion } from "@/lib/types";
-
-const PANELES = [
-  { id: "arg_stocks", label: "Acciones" },
-  { id: "arg_cedears", label: "CEDEARs" },
-  { id: "arg_corp", label: "Obligaciones negociables" },
-] as const;
-
-const cols: Column<Cotizacion>[] = [
-  { key: "s", header: "Especie", render: (r) => <span className="font-semibold">{r.symbol}</span>, sortValue: (r) => r.symbol },
-  { key: "p", header: "Último", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.last, 2)}</span>, sortValue: (r) => r.last },
-  { key: "v", header: "Var. %", align: "right", render: (r) => <Change valor={r.pctChange} />, sortValue: (r) => r.pctChange },
-  { key: "b", header: "Compra", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.bid, 2)}</span> },
-  { key: "a", header: "Venta", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.ask, 2)}</span> },
-  { key: "op", header: "Operaciones", align: "right", render: (r) => <span className="font-mono tabular">{fmtCompact(r.operaciones)}</span>, sortValue: (r) => r.operaciones },
-  { key: "vol", header: "Volumen", align: "right", render: (r) => <span className="font-mono tabular">{fmtCompact(r.volume)}</span>, sortValue: (r) => r.volume },
-];
-
-function Panel({ id }: { id: string }) {
-  const { data, error, loading } = useApi<Cotizacion[]>(`/api/data912/${id}`, 60_000);
-  return (
-    <DataTable
-      columns={cols}
-      rows={(data ?? []).filter((r) => r.last !== null)}
-      rowKey={(r) => r.symbol}
-      initialSort={{ key: "vol", dir: "desc" }}
-      pageSize={15}
-      loading={loading}
-      error={error}
-      fuente="data912.com"
-    />
-  );
-}
-
-export default function EquitySection() {
-  const [tab, setTab] = useState<string>(PANELES[0].id);
-  return (
-    <section aria-labelledby="equity">
-      <SectionTitle
-        id="equity"
-        title="Acciones, CEDEARs y ONs"
-        subtitle="Ordenado por volumen operado. Cotizaciones en pesos de BYMA con demora."
-        right={
-          <div role="tablist" aria-label="Panel" className="flex rounded-full border border-oliva/50 p-1">
-            {PANELES.map((p) => (
-              <button
-                key={p.id}
-                role="tab"
-                type="button"
-                aria-selected={tab === p.id}
-                onClick={() => setTab(p.id)}
-                className={`rounded-full px-4 py-1.5 text-xs font-semibold transition ${tab === p.id ? "bg-oliva text-white" : "text-oliva hover:bg-oliva-100"}`}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-        }
-      />
-      <div role="tabpanel">
-        <Panel key={tab} id={tab} />
-      </div>
-    </section>
-  );
-}
+"use client";import{useMemo,useState}from"react";import SectionTitle from"./SectionTitle";import DataTable,{type Column}from"./DataTable";import Change from"./Change";import{useApi}from"@/lib/useApi";import{fmtCompact,fmtNum}from"@/lib/format";import type{Cotizacion}from"@/lib/types";
+const LIDER=new Set("ALUA BBAR BMA BYMA CEPU COME CRES EDN GGAL IRSA LOMA METR PAMP SUPV TECO2 TGNO4 TGSU2 TRAN TXAR VALO YPFD".split(" "));
+const MAG7=new Set("AAPL AMZN GOOGL GOOG META MSFT NVDA TSLA".split(" "));
+const sectores:Record<string,string>={ALUA:"Materiales",TXAR:"Materiales",BBAR:"Financiero",BMA:"Financiero",GGAL:"Financiero",SUPV:"Financiero",VALO:"Financiero",BYMA:"Financiero",CEPU:"Energía",PAMP:"Energía",YPFD:"Energía",TGNO4:"Energía",TGSU2:"Energía",TRAN:"Energía",EDN:"Utilities",METR:"Utilities",IRSA:"Real Estate",CRES:"Agro / Real Estate",LOMA:"Construcción",TECO2:"Telecom",COME:"Holding",AAPL:"Tecnología",MSFT:"Tecnología",NVDA:"Tecnología",GOOGL:"Tecnología",GOOG:"Tecnología",META:"Tecnología",AMZN:"Consumo",TSLA:"Automotriz",SPY:"ETF",QQQ:"ETF"};
+const P=[{id:"arg_stocks",label:"Acciones"},{id:"arg_cedears",label:"CEDEARs"},{id:"arg_corp",label:"ONs"}]as const;
+const cols:Column<Cotizacion>[]=[{key:"s",header:"Especie",render:r=><span className="font-semibold">{r.symbol}</span>,sortValue:r=>r.symbol},{key:"sector",header:"Sector",render:r=><span className="text-xs text-tinta/60">{sectores[r.symbol]??"Otros"}</span>,sortValue:r=>sectores[r.symbol]??"Otros"},{key:"p",header:"Último",align:"right",render:r=><span className="font-mono tabular">{fmtNum(r.last,2)}</span>,sortValue:r=>r.last},{key:"v",header:"Var. %",align:"right",render:r=><Change valor={r.pctChange}/>,sortValue:r=>r.pctChange},{key:"vol",header:"Volumen",align:"right",render:r=><span className="font-mono tabular">{fmtCompact(r.volume)}</span>,sortValue:r=>r.volume}];
+function Market({id,sub}:{id:string;sub:string}){const{data,error,loading}=useApi<Cotizacion[]>(`/api/data912/${id}`,60000);const rows=useMemo(()=>{let x=(data??[]).filter(r=>r.last!==null);if(id==="arg_stocks")x=x.filter(r=>sub==="lider"?LIDER.has(r.symbol):!LIDER.has(r.symbol));if(id==="arg_cedears"&&sub==="mag7")x=x.filter(r=>MAG7.has(r.symbol));return x},[data,id,sub]);return <><Movers rows={rows}/><DataTable columns={cols} rows={rows} rowKey={r=>r.symbol} initialSort={{key:"vol",dir:"desc"}} pageSize={12} loading={loading} error={error} fuente="data912.com"/></>}
+function Movers({rows}:{rows:Cotizacion[]}){const valid=rows.filter(r=>r.pctChange!=null);if(!valid.length)return null;const best=[...valid].sort((a,b)=>(b.pctChange??0)-(a.pctChange??0)).slice(0,3),worst=[...valid].sort((a,b)=>(a.pctChange??0)-(b.pctChange??0)).slice(0,3);return <div className="mb-5 grid gap-4 sm:grid-cols-2"><div className="rounded-2xl bg-white p-4 shadow-sm"><b className="text-sm">Mejores del día</b>{best.map(x=><div key={x.symbol} className="mt-2 flex justify-between text-sm"><span>{x.symbol}</span><Change valor={x.pctChange}/></div>)}</div><div className="rounded-2xl bg-white p-4 shadow-sm"><b className="text-sm">Peores del día</b>{worst.map(x=><div key={x.symbol} className="mt-2 flex justify-between text-sm"><span>{x.symbol}</span><Change valor={x.pctChange}/></div>)}</div></div>}
+export default function EquitySection(){const[tab,setTab]=useState("arg_stocks"),[sub,setSub]=useState("lider");return <section aria-labelledby="equity"><SectionTitle id="equity" title="Acciones, CEDEARs y ONs" subtitle="Mercado organizado por panel y sector. Cotizaciones BYMA con demora."/ ><div className="mb-4 flex flex-wrap gap-2">{P.map(p=><button key={p.id} onClick={()=>{setTab(p.id);setSub(p.id==="arg_stocks"?"lider":"todos")}} className={`rounded-full border px-4 py-1.5 text-xs font-semibold ${tab===p.id?"bg-oliva text-white":"border-oliva/50 text-oliva"}`}>{p.label}</button>)}</div>{tab==="arg_stocks"&&<div className="mb-4 flex gap-2"><button onClick={()=>setSub("lider")} className={`text-xs font-bold ${sub==="lider"?"text-oliva underline":""}`}>Panel líder</button><button onClick={()=>setSub("general")} className={`text-xs font-bold ${sub==="general"?"text-oliva underline":""}`}>Panel general</button></div>}{tab==="arg_cedears"&&<div className="mb-4 flex gap-2"><button onClick={()=>setSub("todos")} className={`text-xs font-bold ${sub==="todos"?"text-oliva underline":""}`}>Todos</button><button onClick={()=>setSub("mag7")} className={`text-xs font-bold ${sub==="mag7"?"text-oliva underline":""}`}>7 Magníficas</button></div>}<Market key={tab+sub} id={tab} sub={sub}/></section>}
