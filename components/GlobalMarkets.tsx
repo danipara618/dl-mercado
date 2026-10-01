@@ -36,19 +36,26 @@ export default function GlobalMarkets() {
     <section aria-labelledby="global">
       <SectionTitle id="global" title="Mercados globales" subtitle="Índices, tasas del Tesoro, monedas, commodities, cripto y ADRs argentinos." />
       <div className="grid items-start gap-5 lg:grid-cols-2">
-        {Object.keys(GRUPOS_GLOBALES).map((grupo) => (
-          <article key={grupo} className="min-w-0 overflow-hidden rounded-2xl border border-crema-200 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 border-b border-crema-200 pb-3 font-serif text-xl text-tinta">{grupo}</h3>
-            <DataTable
-              columns={cols}
-              rows={(data ?? []).filter((q) => q.grupo === grupo)}
-              rowKey={(r) => r.symbol}
-              pageSize={20}
-              loading={loading}
-              error={error}
-              fuente="Yahoo Finance"
-            />
-          </article>
+        {[
+          ["Índices de EE.UU.", "Mundo y región", "Commodities", "Cripto"],
+          ["Tasas del Tesoro y dólar global", "Monedas", "Argentina en Wall Street"],
+        ].map((columna, i) => (
+          <div key={i} className="grid min-w-0 gap-5">
+            {columna.filter((grupo) => grupo in GRUPOS_GLOBALES).map((grupo) => (
+              <article key={grupo} className="min-w-0 overflow-hidden rounded-2xl border border-crema-200 bg-white p-4 shadow-sm">
+                <h3 className="mb-3 border-b border-crema-200 pb-3 font-serif text-xl text-tinta">{grupo}</h3>
+                <DataTable
+                  columns={cols}
+                  rows={(data ?? []).filter((q) => q.grupo === grupo)}
+                  rowKey={(r) => r.symbol}
+                  pageSize={20}
+                  loading={loading}
+                  error={error}
+                  fuente="Yahoo Finance"
+                />
+              </article>
+            ))}
+          </div>
         ))}
       </div>
     </section>
