@@ -12,6 +12,8 @@ export interface Column<T> {
   /** Valor para ordenar; si falta, la columna no es ordenable */
   sortValue?: (row: T) => number | string | null;
   className?: string;
+  /** Oculta la columna en pantallas chicas; se muestra desde sm en adelante. */
+  hideOnMobile?: boolean;
 }
 
 interface Props<T> {
@@ -66,7 +68,7 @@ export default function DataTable<T>({
                     key={c.key}
                     scope="col"
                     aria-sort={activo ? (sort!.dir === "asc" ? "ascending" : "descending") : undefined}
-                    className={`px-2 py-3 text-[11px] font-bold text-oliva sm:px-3 sm:text-xs ${alinear(c.align)}`}
+                    className={`px-2 py-3 text-[11px] font-bold text-oliva sm:px-3 sm:text-xs ${c.hideOnMobile ? "hidden sm:table-cell" : ""} ${alinear(c.align)}`}
                   >
                     {c.sortValue ? (
                       <button
@@ -102,7 +104,7 @@ export default function DataTable<T>({
               : visibles.map((r) => (
                   <tr key={rowKey(r)} onClick={() => onRowClick?.(r)} className={`border-b border-crema-200/60 last:border-0 even:bg-crema-50/60 hover:bg-oliva-100/40 ${onRowClick ? "cursor-pointer" : ""}`}>
                     {columns.map((c) => (
-                      <td key={c.key} className={`overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2.5 sm:px-3 ${alinear(c.align)} ${c.className ?? ""}`}>
+                      <td key={c.key} className={`overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2.5 sm:px-3 ${c.hideOnMobile ? "hidden sm:table-cell" : ""} ${alinear(c.align)} ${c.className ?? ""}`}>
                         {c.render(r)}
                       </td>
                     ))}
