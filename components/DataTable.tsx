@@ -25,10 +25,11 @@ interface Props<T> {
   error?: string | null;
   fuente?: string;
   vacio?: string;
+  onRowClick?: (row: T) => void;
 }
 
 export default function DataTable<T>({
-  columns, rows, rowKey, caption, initialSort, pageSize = 12, loading, error, fuente, vacio = "Sin datos para mostrar.",
+  columns, rows, rowKey, caption, initialSort, pageSize = 12, loading, error, fuente, vacio = "Sin datos para mostrar.", onRowClick,
 }: Props<T>) {
   const [sort, setSort] = useState(initialSort ?? null);
   const [expandido, setExpandido] = useState(false);
@@ -99,7 +100,7 @@ export default function DataTable<T>({
                   </tr>
                 ))
               : visibles.map((r) => (
-                  <tr key={rowKey(r)} className="border-b border-crema-200/60 last:border-0 even:bg-crema-50/60 hover:bg-oliva-100/40">
+                  <tr key={rowKey(r)} onClick={() => onRowClick?.(r)} className={`border-b border-crema-200/60 last:border-0 even:bg-crema-50/60 hover:bg-oliva-100/40 ${onRowClick ? "cursor-pointer" : ""}`}>
                     {columns.map((c) => (
                       <td key={c.key} className={`overflow-hidden text-ellipsis whitespace-nowrap px-2 py-2.5 sm:px-3 ${alinear(c.align)} ${c.className ?? ""}`}>
                         {c.render(r)}
