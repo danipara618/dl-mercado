@@ -24,6 +24,7 @@ export default function Home() {
         <section id="mercado" aria-labelledby="kpis">
           <SectionTitle id="kpis" title="Data de mercado" subtitle="Una lectura rápida del dólar, riesgo soberano, índices y tasas." />
           <KPIGrid />
+          <p className="mt-4 text-center text-xs text-tinta/45">Datos actualizados automáticamente según disponibilidad de cada fuente. Cotizaciones de mercado pueden presentar demora.</p>
         </section>
 
         <section aria-labelledby="riesgo" className="rounded-3xl border border-crema-200 bg-crema-50/60 p-4 sm:p-6">
