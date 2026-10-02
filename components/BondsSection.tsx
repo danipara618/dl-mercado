@@ -62,26 +62,26 @@ export default function BondsSection() {
 
   const colsUSD: Column<FilaUSD>[] = [
     { key: "t", header: "Bono", render: (r) => <span className="font-semibold">{r.spec.ticker}D</span>, sortValue: (r) => r.spec.ticker },
-    { key: "ley", header: "Ley", render: (r) => r.spec.ley, sortValue: (r) => r.spec.ley },
-    { key: "vto", header: "Vencimiento", render: (r) => <span className="font-mono">{fmtFecha(r.spec.vencimiento)}</span>, sortValue: (r) => r.spec.vencimiento },
+    { key: "ley", hideOnMobile: true, header: "Ley", render: (r) => r.spec.ley, sortValue: (r) => r.spec.ley },
+    { key: "vto", hideOnMobile: true, header: "Vencimiento", render: (r) => <span className="font-mono">{fmtFecha(r.spec.vencimiento)}</span>, sortValue: (r) => r.spec.vencimiento },
     { key: "p", header: "Precio (USD)", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.precio, 2)}</span>, sortValue: (r) => r.precio },
     { key: "v", header: "Var. %", align: "right", render: (r) => <Change valor={r.varPct} />, sortValue: (r) => r.varPct },
     { key: "tir", header: "TIR", align: "center", render: (r) => <TirPill tir={r.tir} />, sortValue: (r) => r.tir },
-    { key: "md", header: "Duration mod.", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.durationMod, 2)}</span>, sortValue: (r) => r.durationMod },
-    { key: "par", header: "Paridad", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.paridad, 1)}%</span>, sortValue: (r) => r.paridad },
-    { key: "cup", header: "Cupón vigente", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.cuponVigente, Number.isInteger(r.cuponVigente * 100) ? 2 : 3)}%</span>, sortValue: (r) => r.cuponVigente },
-    { key: "res", header: "Residual", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.residual, 1)}%</span>, sortValue: (r) => r.residual },
-    { key: "vol", header: "Volumen", align: "right", render: (r) => <span className="font-mono tabular">{fmtCompact(r.volumen)}</span>, sortValue: (r) => r.volumen },
+    { key: "md", hideOnMobile: true, header: "Duration mod.", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.durationMod, 2)}</span>, sortValue: (r) => r.durationMod },
+    { key: "par", hideOnMobile: true, header: "Paridad", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.paridad, 1)}%</span>, sortValue: (r) => r.paridad },
+    { key: "cup", hideOnMobile: true, header: "Cupón vigente", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.cuponVigente, Number.isInteger(r.cuponVigente * 100) ? 2 : 3)}%</span>, sortValue: (r) => r.cuponVigente },
+    { key: "res", hideOnMobile: true, header: "Residual", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.residual, 1)}%</span>, sortValue: (r) => r.residual },
+    { key: "vol", hideOnMobile: true, header: "Volumen", align: "right", render: (r) => <span className="font-mono tabular">{fmtCompact(r.volumen)}</span>, sortValue: (r) => r.volumen },
   ];
 
   const colsARS: Column<FilaARS>[] = [
     { key: "t", header: "Bono", render: (r) => <span className="font-semibold">{r.ticker}</span>, sortValue: (r) => r.ticker },
-    { key: "ley", header: "Ley", render: (r) => r.ley, sortValue: (r) => r.ley },
+    { key: "ley", hideOnMobile: true, header: "Ley", render: (r) => r.ley, sortValue: (r) => r.ley },
     { key: "p", header: "Precio (ARS)", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.precio, 2)}</span>, sortValue: (r) => r.precio },
     { key: "v", header: "Var. %", align: "right", render: (r) => <Change valor={r.varPct} />, sortValue: (r) => r.varPct },
-    { key: "mep", header: "MEP implícito", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.mep, 2)}</span>, sortValue: (r) => r.mep },
-    { key: "ccl", header: "CCL implícito", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.ccl, 2)}</span>, sortValue: (r) => r.ccl },
-    { key: "vol", header: "Volumen", align: "right", render: (r) => <span className="font-mono tabular">{fmtCompact(r.volumen)}</span>, sortValue: (r) => r.volumen },
+    { key: "mep", hideOnMobile: true, header: "MEP implícito", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.mep, 2)}</span>, sortValue: (r) => r.mep },
+    { key: "ccl", hideOnMobile: true, header: "CCL implícito", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.ccl, 2)}</span>, sortValue: (r) => r.ccl },
+    { key: "vol", hideOnMobile: true, header: "Volumen", align: "right", render: (r) => <span className="font-mono tabular">{fmtCompact(r.volumen)}</span>, sortValue: (r) => r.volumen },
   ];
 
   const curva = (ley: string) =>
