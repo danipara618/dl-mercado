@@ -16,7 +16,7 @@ interface Fila extends Cotizacion {
   dias: number | null;
 }
 
-const FILTROS: (TipoPesos | "Todos")[] = ["Todos", "LECAP", "BONCAP", "CER", "Dual", "Dollar linked"];
+const FILTROS: (TipoPesos | "Todos")[] = ["Todos", "LECAP", "CER", "Dual", "Dollar linked"];
 
 export default function PesosSection() {
   const notas = useApi<Cotizacion[]>("/api/data912/arg_notes", 60_000);
@@ -37,7 +37,7 @@ export default function PesosSection() {
       out.push({ ...q, tipo, vto: null, dias: null });
     }
     // Descarta vencidos
-    return out.filter((f) => f.dias === null || f.dias >= 0);
+    return out.filter((f) => f.tipo !== "BONCAP" && (f.dias === null || f.dias >= 0));
   }, [notas.data, bonos.data]);
 
   const visibles = filtro === "Todos" ? filas : filas.filter((f) => f.tipo === filtro);
@@ -59,7 +59,7 @@ export default function PesosSection() {
       <SectionTitle
         id="pesos"
         title="Renta fija en pesos"
-        subtitle="Letras capitalizables (LECAP), bonos capitalizables (BONCAP), ajustables por CER, duales y dollar linked."
+        subtitle="LECAP, bonos ajustables por CER, duales y dollar linked."
         right={
           <div role="group" aria-label="Filtrar por tipo" className="flex flex-wrap gap-2">
             {FILTROS.map((f) => (
@@ -78,7 +78,7 @@ export default function PesosSection() {
           </div>
         }
       />
-      <p className="mb-4 text-sm text-tinta/60">Para mantener el panel simple, acá mostramos cotización y liquidez. El cálculo de vencimiento y rendimiento queda en el simulador de LECAP/BONCAP.</p>
+      <p className="mb-4 text-sm text-tinta/60">Para mantener el panel simple, acá mostramos cotización y liquidez. El cálculo de vencimiento y rendimiento queda en el simulador de LECAP.</p>
       <DataTable
         columns={cols}
         rows={cargando ? [] : visibles}
@@ -90,7 +90,7 @@ export default function PesosSection() {
         fuente="data912.com"
         caption="Renta fija en pesos"
       />
-      {(filtro === "LECAP" || filtro === "BONCAP") && <LecapSimulator />}
+      {filtro === "LECAP" && <LecapSimulator />}
     </section>
   );
 }
