@@ -88,7 +88,21 @@ export default function BondsSection() {
     filasUSD
       .filter((r) => r.spec.ley === ley && r.tir !== null && r.durationMod !== null)
       .map((r) => ({ md: r.durationMod!, tir: r.tir!, ticker: r.spec.ticker }))
-      .sort((a, b) => a.md - b.md); // la línea une los puntos en orden de duration
+      .sort((a, b) => a.md - b.md);
+
+  const puntosCurva = [...curva("Local"), ...curva("NY")];
+  const dominioX: [number, number] = puntosCurva.length
+    ? [Math.max(0, Math.floor(Math.min(...puntosCurva.map((p) => p.md)) - 0.5)), Math.ceil(Math.max(...puntosCurva.map((p) => p.md)) + 0.5)]
+    : [0, 10];
+  const dominioY: [number, number] = puntosCurva.length
+    ? [Math.floor(Math.min(...puntosCurva.map((p) => p.tir)) - 1), Math.ceil(Math.max(...puntosCurva.map((p) => p.tir)) + 1)]
+    : [0, 20];
+  const PuntoCurva = ({ cx, cy, payload, fill }: any) => (
+    <g>
+      <circle cx={cx} cy={cy} r={5} fill={fill} stroke="white" strokeWidth={2} />
+      <text x={cx} y={cy - 10} textAnchor="middle" fontSize={10} fontWeight={700} fill="#2C3A22">{payload.ticker}</text>
+    </g>
+  );
 
   return (
     <>
@@ -110,14 +124,21 @@ export default function BondsSection() {
         />
 
         {!!curva("Local").length && (
-          <div className="mt-6 rounded-2xl bg-white p-5 shadow-md ring-1 ring-black/5">
-            <h3 className="mb-4 text-sm font-bold text-oliva">Curva soberana: TIR vs. duration modificada</h3>
-            <div className="h-[300px]">
+          <div className="mt-6 rounded-2xl border border-crema-200 bg-white p-5 shadow-sm">
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[.14em] text-oliva">Curva soberana</p>
+                <h3 className="mt-1 font-serif text-2xl">TIR vs. duration modificada</h3>
+                <p className="mt-1 text-sm text-tinta/55">Cada punto es un bono. Compará nivel de rendimiento y sensibilidad entre ley local y Nueva York.</p>
+              </div>
+              <span className="rounded-full bg-crema-50 px-3 py-1 text-xs font-semibold text-tinta/55">Eje X: años · Eje Y: TIR %</span>
+            </div>
+            <div className="h-[360px]">
               <ResponsiveContainer>
                 <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
                   <CartesianGrid vertical={false} stroke="#E7DECD" />
-                  <XAxis type="number" dataKey="md" name="Duration" unit=" a" tick={{ fontSize: 12 }} domain={[0, (max: number) => Math.ceil(max + 0.5)]} allowDecimals={false} tickFormatter={(v: number) => fmtNum(v, 0)} />
-                  <YAxis type="number" dataKey="tir" name="TIR" unit="%" tick={{ fontSize: 12 }} width={56} domain={["auto", "auto"]} tickFormatter={(v: number) => fmtNum(v, 1)} />
+                  <XAxis type="number" dataKey="md" name="Duration" unit=" a" tick={{ fontSize: 12 }} domain={dominioX} allowDecimals={false} tickFormatter={(v: number) => fmtNum(v, 0)} />
+                  <YAxis type="number" dataKey="tir" name="TIR" unit="%" tick={{ fontSize: 12 }} width={56} domain={dominioY} tickFormatter={(v: number) => fmtNum(v, 1)} />
                   <ZAxis range={[90, 90]} />
                   <Tooltip
                     cursor={{ strokeDasharray: "4 4" }}
@@ -125,8 +146,8 @@ export default function BondsSection() {
                     labelFormatter={() => ""}
                   />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Scatter name="Bonares (ley local)" data={curva("Local")} fill="#2C3A22" line={{ stroke: "#2C3A22", strokeWidth: 1.5 }} />
-                  <Scatter name="Globales (ley NY)" data={curva("NY")} fill="#9AA36B" line={{ stroke: "#9AA36B", strokeWidth: 1.5 }} shape="diamond" />
+                  <Scatter name="Bonares (ley local)" data={curva("Local")} fill="#2C3A22" line={{ stroke: "#2C3A22", strokeWidth: 2 }} shape={<PuntoCurva />} />
+                  <Scatter name="Globales (ley NY)" data={curva("NY")} fill="#9AA36B" line={{ stroke: "#9AA36B", strokeWidth: 2 }} shape={<PuntoCurva />} />
                 </ScatterChart>
               </ResponsiveContainer>
             </div>
