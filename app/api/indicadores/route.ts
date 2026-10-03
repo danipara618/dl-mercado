@@ -40,7 +40,7 @@ export async function GET() {
   const data: Indicadores = {
     inflacionMensual: sMensual.at(-1) ?? null,
     inflacionInteranual: sInteranual.at(-1) ?? null,
-    inflacionSerie: sMensual.slice(-24),
+    inflacionSerie: sMensual,
     plazoFijo,
   };
   return ok(data, 3600);

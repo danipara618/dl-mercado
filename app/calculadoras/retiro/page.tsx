@@ -1,0 +1,3 @@
+import Header from "@/components/Header"; import Footer from "@/components/Footer"; import SectionTitle from "@/components/SectionTitle"; import RetirementCalculator from "@/components/calculators/RetirementCalculator";
+export const metadata={title:"Calculadora de retiro | DL Mercado",description:"Proyectá capital para retiro en USD y poder adquisitivo real."};
+export default function Page(){return <><Header/><main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8"><SectionTitle as="h1" title="Calculadora de retiro" subtitle="Proyectá aportes de largo plazo en USD y comparalos en poder adquisitivo real."/><RetirementCalculator/></main><Footer/></>}

@@ -16,8 +16,8 @@ interface Props {
 
 export default function KPICard({ icono: Icono, titulo, valor, unidad, variacion, detalle, loading, error }: Props) {
   return (
-    <article className="flex min-h-[132px] overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5">
-      <div className="flex w-1/5 min-w-[64px] items-center justify-center bg-oliva text-white">
+    <article className="flex min-h-[118px] overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+      <div className="flex w-14 shrink-0 items-center justify-center bg-oliva text-white">
         {typeof Icono === "string" ? (
           <span className="font-serif text-4xl leading-none">{Icono}</span>
         ) : (
@@ -25,7 +25,7 @@ export default function KPICard({ icono: Icono, titulo, valor, unidad, variacion
         )}
       </div>
 
-      <div className="flex flex-1 flex-col justify-center px-5 py-4">
+      <div className="flex min-w-0 flex-1 flex-col justify-center px-4 py-3">
         <h3 className="text-sm font-semibold text-tinta/70">{titulo}</h3>
         {loading ? (
           <div className="mt-2 space-y-2">
@@ -37,7 +37,7 @@ export default function KPICard({ icono: Icono, titulo, valor, unidad, variacion
         ) : (
           <>
             <p className="mt-1 flex items-baseline gap-1.5">
-              <span className="font-serif text-[2rem] leading-none text-tinta tabular">{valor}</span>
+              <span className="font-serif text-[1.65rem] leading-none text-tinta tabular">{valor}</span>
               {unidad && <span className="text-sm text-tinta/55">{unidad}</span>}
             </p>
             {(variacion || detalle) && (

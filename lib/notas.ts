@@ -1,0 +1,9 @@
+import "server-only";import fs from "node:fs";import path from "node:path";import matter from "gray-matter";
+const DIR=path.join(process.cwd(),"content","notas");export const CATEGORIAS=["Coyuntura","Explicado","Mercados","Datos"] as const;export type Categoria=(typeof CATEGORIAS)[number];
+export interface NotaMeta{slug:string;titulo:string;bajada:string;fecha:string;categoria:Categoria;autor:string;etiquetas:string[];portada?:string;destacada:boolean;minutos:number}
+function fechaISO(v:unknown){return v instanceof Date?v.toISOString().slice(0,10):String(v??"").slice(0,10)}
+function leer(a:string){const slug=a.replace(/\.mdx?$/,"");const {data,content}=matter(fs.readFileSync(path.join(DIR,a),"utf8"));if(!data.titulo||!data.fecha)return null;const categoria=CATEGORIAS.includes(data.categoria)?data.categoria as Categoria:"Coyuntura";return{meta:{slug,titulo:String(data.titulo),bajada:String(data.bajada??""),fecha:fechaISO(data.fecha),categoria,autor:String(data.autor??"Daniel Lezcano"),etiquetas:Array.isArray(data.etiquetas)?data.etiquetas.map(String):[],portada:data.portada?String(data.portada):undefined,destacada:Boolean(data.destacada),minutos:Math.max(1,Math.round(content.split(/\s+/).filter(Boolean).length/220))} as NotaMeta,contenido:content}}
+function archivos(){return fs.existsSync(DIR)?fs.readdirSync(DIR).filter(f=>/\.mdx?$/.test(f)&&!f.startsWith("_")):[]}
+export function listarNotas(){const hoy=new Date().toISOString().slice(0,10);return archivos().map(leer).filter((n):n is NonNullable<typeof n>=>!!n&&n.meta.fecha<=hoy).map(n=>n.meta).sort((a,b)=>b.fecha.localeCompare(a.fecha))}
+export function obtenerNota(slug:string){const a=archivos().find(f=>f.replace(/\.mdx?$/,"")===slug);return a?leer(a):null}
+export function fechaLarga(iso:string){const[y,m,d]=iso.split("-").map(Number);return new Intl.DateTimeFormat("es-AR",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(Date.UTC(y,m-1,d)))}

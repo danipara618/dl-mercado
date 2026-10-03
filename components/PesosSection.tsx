@@ -6,8 +6,9 @@ import DataTable, { type Column } from "./DataTable";
 import Change from "./Change";
 import { useApi } from "@/lib/useApi";
 import { clasificar, diasAlVencimiento, vencimientoPorTicker, type TipoPesos } from "@/lib/letras";
-import { fmtCompact, fmtFecha, fmtNum } from "@/lib/format";
+import { fmtCompact, fmtNum } from "@/lib/format";
 import type { Cotizacion } from "@/lib/types";
+import LecapSimulator from "./LecapSimulator";
 
 interface Fila extends Cotizacion {
   tipo: TipoPesos;
@@ -15,7 +16,7 @@ interface Fila extends Cotizacion {
   dias: number | null;
 }
 
-const FILTROS: (TipoPesos | "Todos")[] = ["Todos", "LECAP", "BONCAP", "CER", "Dual", "Dollar linked"];
+const FILTROS: (TipoPesos | "Todos")[] = ["Todos", "LECAP", "CER", "Dual", "Dollar linked"];
 
 export default function PesosSection() {
   const notas = useApi<Cotizacion[]>("/api/data912/arg_notes", 60_000);
@@ -36,7 +37,7 @@ export default function PesosSection() {
       out.push({ ...q, tipo, vto: null, dias: null });
     }
     // Descarta vencidos
-    return out.filter((f) => f.dias === null || f.dias >= 0);
+    return out.filter((f) => f.tipo !== "BONCAP" && (f.dias === null || f.dias >= 0));
   }, [notas.data, bonos.data]);
 
   const visibles = filtro === "Todos" ? filas : filas.filter((f) => f.tipo === filtro);
@@ -44,8 +45,6 @@ export default function PesosSection() {
   const cols: Column<Fila>[] = [
     { key: "s", header: "Especie", render: (r) => <span className="font-semibold">{r.symbol}</span>, sortValue: (r) => r.symbol },
     { key: "tipo", header: "Tipo", render: (r) => <span className="rounded-md bg-oliva-100 px-2 py-0.5 text-xs font-semibold text-oliva">{r.tipo}</span>, sortValue: (r) => r.tipo },
-    { key: "vto", header: "Vencimiento", render: (r) => <span className="font-mono">{r.vto ? fmtFecha(r.vto) : "—"}</span>, sortValue: (r) => r.vto?.getTime() ?? null },
-    { key: "d", header: "Días", align: "right", render: (r) => <span className="font-mono tabular">{r.dias ?? "—"}</span>, sortValue: (r) => r.dias },
     { key: "p", header: "Precio (ARS)", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.last, 2)}</span>, sortValue: (r) => r.last },
     { key: "b", header: "Compra", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.bid, 2)}</span> },
     { key: "a", header: "Venta", align: "right", render: (r) => <span className="font-mono tabular">{fmtNum(r.ask, 2)}</span> },
@@ -60,7 +59,7 @@ export default function PesosSection() {
       <SectionTitle
         id="pesos"
         title="Renta fija en pesos"
-        subtitle="Letras capitalizables (LECAP), bonos capitalizables (BONCAP), ajustables por CER, duales y dollar linked."
+        subtitle="LECAP, bonos ajustables por CER, duales y dollar linked."
         right={
           <div role="group" aria-label="Filtrar por tipo" className="flex flex-wrap gap-2">
             {FILTROS.map((f) => (
@@ -79,17 +78,19 @@ export default function PesosSection() {
           </div>
         }
       />
+      <p className="mb-4 text-sm text-tinta/60">Para mantener el panel simple, acá mostramos cotización y liquidez. El cálculo de vencimiento y rendimiento queda en el simulador de LECAP.</p>
       <DataTable
         columns={cols}
         rows={cargando ? [] : visibles}
         rowKey={(r) => r.symbol}
-        initialSort={{ key: "vto", dir: "asc" }}
+        initialSort={{ key: "vol", dir: "desc" }}
         pageSize={15}
         loading={cargando}
         error={notas.error ?? bonos.error}
         fuente="data912.com"
         caption="Renta fija en pesos"
       />
+      {filtro === "LECAP" && <LecapSimulator />}
     </section>
   );
 }

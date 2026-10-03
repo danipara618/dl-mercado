@@ -16,7 +16,10 @@
     "react-dom": "^19.3.0",
     "react-is": "^19.3.0",
     "recharts": "^2.15.4",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "gray-matter": "^4.0.3",
+    "next-mdx-remote": "^6.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
