@@ -1,17 +1,45 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ArrowRight, Calculator, ChartNoAxesCombined } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 import KPIGrid from "@/components/KPIGrid";
-import RiskChart from "@/components/RiskChart";
-import BondsSection from "@/components/BondsSection";
-import PesosSection from "@/components/PesosSection";
-import EquitySection from "@/components/EquitySection";
-import GlobalMarkets from "@/components/GlobalMarkets";
 import EducationBlock from "@/components/EducationBlock";
 import HomeAbout from "@/components/HomeAbout";
-import MacroDashboard from "@/components/MacroDashboard";
+import { Skeleton } from "@/components/States";
+
+// Cada uno de estos componentes es "use client" y arrastra Recharts (gráficos de
+// línea/barra/dispersión). Importados de forma estática, Recharts queda empaquetado
+// en el JS inicial que el navegador debe bajar y ejecutar antes de poder hidratar la
+// página, aunque la mayoría de estas secciones estén debajo del pliegue. Con
+// next/dynamic cada una pasa a su propio chunk: se sigue renderizando en el servidor
+// (ssr: true, no se pierde contenido para SEO/accesibilidad) pero Recharts ya no
+// forma parte del bundle principal que bloquea la hidratación.
+const RiskChart = dynamic(() => import("@/components/RiskChart"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[380px] w-full rounded-2xl" />,
+});
+const MacroDashboard = dynamic(() => import("@/components/MacroDashboard"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[520px] w-full rounded-3xl" />,
+});
+const BondsSection = dynamic(() => import("@/components/BondsSection"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
+});
+const PesosSection = dynamic(() => import("@/components/PesosSection"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
+});
+const EquitySection = dynamic(() => import("@/components/EquitySection"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
+});
+const GlobalMarkets = dynamic(() => import("@/components/GlobalMarkets"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
+});
 
 // ISR: la fecha del encabezado se regenera cada 10 minutos; los datos se cargan en el cliente.
 export const revalidate = 600;
