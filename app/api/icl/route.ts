@@ -23,7 +23,8 @@ export async function GET(req: Request) {
   const hasta = searchParams.get("hasta");
   if (!desde || !hasta || !/^\d{4}-\d{2}-\d{2}$/.test(desde) || !/^\d{4}-\d{2}-\d{2}$/.test(hasta) || desde > hasta)
     return fail("Fechas inválidas", 400);
-  const url = `https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/40?desde=${desde}&hasta=${hasta}&limit=5000`;
+  // BCRA v4.0 rechaza con 400 cualquier limit > 3000 (es el máximo que acepta la API).
+  const url = `https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/40?desde=${desde}&hasta=${hasta}&limit=3000`;
   try {
     let json: unknown;
     try { json = await fetchJson(url, { revalidate: 3600 }); }

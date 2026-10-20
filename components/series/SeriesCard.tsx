@@ -1,14 +1,15 @@
 "use client";
-// Tarjeta de una serie: mini-gráfico de línea (color por categoría), último valor,
-// variación y descarga en CSV. Cada tarjeta tiene su propio useApi — igual que en
-// KPIGrid, así el refresco de una serie no re-renderiza a las demás.
+// Tarjeta de una serie: gráfico de línea (color por serie dentro de la rampa de su
+// categoría — ver lib/seriesCatalogo.ts), último valor, variación, compartir y
+// descarga en CSV. Cada tarjeta tiene su propio useApi — igual que en KPIGrid, así
+// el refresco de una serie no re-renderiza a las demás.
 import { useMemo, useState } from "react";
 import { Check, Download, Share2 } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useApi } from "@/lib/useApi";
 import { fmtFecha, fmtNum } from "@/lib/format";
 import type { Punto } from "@/lib/types";
-import { CATEGORIAS, type SerieDef } from "@/lib/seriesCatalogo";
+import type { SerieDef } from "@/lib/seriesCatalogo";
 import { normalizarSerie } from "@/lib/seriesNormalizar";
 import { ErrorNote, Skeleton } from "../States";
 import Change from "../Change";
@@ -51,7 +52,6 @@ async function compartir(def: SerieDef, ultimo: Punto | null, onCopiado: () => v
 
 export default function SeriesCard({ def }: { def: SerieDef }) {
   const { data, error, loading } = useApi<unknown>(def.endpoint, def.refreshMs);
-  const color = CATEGORIAS[def.categoria].color;
   const [copiado, setCopiado] = useState(false);
 
   const { serie, ultimo, anterior } = useMemo(() => {
@@ -60,20 +60,22 @@ export default function SeriesCard({ def }: { def: SerieDef }) {
   }, [data, def.tipo]);
 
   const variacion = ultimo && anterior && anterior.valor !== 0 ? ((ultimo.valor - anterior.valor) / Math.abs(anterior.valor)) * 100 : null;
-  const denso = serie.length > 300;
+  const denso = serie.length > 400;
   const sinDatos = !loading && !error && serie.length === 0;
 
   return (
-    <article id={def.slug} className="flex scroll-mt-24 flex-col overflow-hidden rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
-      <div className="mb-2 flex items-start justify-between gap-2">
+    <article id={def.slug} className="flex scroll-mt-24 flex-col overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 sm:p-6">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="truncate text-sm font-semibold text-tinta">{def.titulo}</h3>
+          <h3 className="truncate text-base font-semibold text-tinta">{def.titulo}</h3>
           {ultimo && (
-            <p className="mt-1 flex items-baseline gap-2">
-              <span className="font-mono text-xl tabular text-tinta">{fmtNum(ultimo.valor, def.decimales ?? 2)}</span>
-              <span className="text-xs text-tinta/55">{def.unidad}</span>
+            <p className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="font-mono text-3xl tabular text-tinta">{fmtNum(ultimo.valor, def.decimales ?? 2)}</span>
+              <span className="text-sm text-tinta/55">{def.unidad}</span>
+              {variacion !== null && <Change valor={variacion} dec={1} invertir={def.categoria === "riesgo"} className="text-sm" />}
             </p>
           )}
+          {ultimo && <p className="mt-0.5 font-mono text-xs text-tinta/45">Último dato: {fmtFecha(ultimo.fecha)}</p>}
         </div>
         <div className="flex shrink-0 gap-1.5">
           <button
@@ -87,7 +89,7 @@ export default function SeriesCard({ def }: { def: SerieDef }) {
             }}
             aria-label={`Compartir ${def.titulo}`}
             title={copiado ? "¡Enlace copiado!" : "Compartir"}
-            className="rounded-full border border-crema-200 p-1.5 text-tinta/60 transition hover:border-oliva/40 hover:text-oliva"
+            className="rounded-full border border-crema-200 p-2 text-tinta/60 transition hover:border-oliva/40 hover:text-oliva"
           >
             {copiado ? <Check className="h-4 w-4 text-pos" aria-hidden="true" /> : <Share2 className="h-4 w-4" aria-hidden="true" />}
           </button>
@@ -97,41 +99,54 @@ export default function SeriesCard({ def }: { def: SerieDef }) {
             disabled={!serie.length}
             aria-label={`Descargar ${def.titulo} en CSV`}
             title="Descargar CSV"
-            className="rounded-full border border-crema-200 p-1.5 text-tinta/60 transition hover:border-oliva/40 hover:text-oliva disabled:opacity-30"
+            className="rounded-full border border-crema-200 p-2 text-tinta/60 transition hover:border-oliva/40 hover:text-oliva disabled:opacity-30"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      <div className="mb-2 flex items-center gap-3 text-xs text-tinta/55">
-        {variacion !== null && <Change valor={variacion} dec={1} invertir={def.categoria === "riesgo"} />}
-        {ultimo && <span className="font-mono">{fmtFecha(ultimo.fecha)}</span>}
-      </div>
-
       {error && !serie.length ? (
         <ErrorNote mensaje={error} />
       ) : loading && !serie.length ? (
-        <Skeleton className="h-[110px] w-full" />
+        <Skeleton className="h-[280px] w-full" />
       ) : sinDatos ? (
-        <div className="grid h-[110px] place-items-center text-xs text-tinta/40">Sin datos disponibles</div>
+        <div className="grid h-[280px] place-items-center text-sm text-tinta/40">Sin datos disponibles</div>
       ) : (
-        <div className="h-[110px] w-full">
+        <div className="h-[280px] w-full">
           <ResponsiveContainer>
-            <LineChart data={serie} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
-              <CartesianGrid vertical={false} strokeOpacity={0.1} />
-              <XAxis dataKey="fecha" tick={false} axisLine={false} tickLine={false} />
-              <YAxis domain={["auto", "auto"]} tick={false} axisLine={false} tickLine={false} width={0} />
+            <LineChart data={serie} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
+              <CartesianGrid vertical={false} stroke="#E7DECD" strokeOpacity={0.7} />
+              <XAxis
+                dataKey="fecha"
+                tickFormatter={(f: string) => fmtFecha(f, true)}
+                minTickGap={56}
+                tick={{ fontSize: 11, fill: "#1A1A1A99", fontFamily: "var(--font-dm-mono)" }}
+                axisLine={{ stroke: "#E7DECD" }}
+                tickLine={false}
+              />
+              <YAxis
+                domain={["auto", "auto"]}
+                width={56}
+                tickFormatter={(v: number) => fmtNum(v, v > 1000 ? 0 : def.decimales ?? 1)}
+                tick={{ fontSize: 11, fill: "#1A1A1A99", fontFamily: "var(--font-dm-mono)" }}
+                axisLine={false}
+                tickLine={false}
+              />
               <Tooltip
                 formatter={(v: number) => [fmtNum(v, def.decimales ?? 2), def.unidad]}
                 labelFormatter={(f: string) => fmtFecha(f)}
-                contentStyle={{ fontSize: 12 }}
+                contentStyle={{ fontSize: 12, borderRadius: 8, borderColor: "#E7DECD" }}
               />
-              <Line type="monotone" dataKey="valor" stroke={color} strokeWidth={denso ? 1.5 : 2} dot={false} isAnimationActive={!denso} />
+              <Line type="monotone" dataKey="valor" stroke={def.color} strokeWidth={denso ? 1.6 : 2.4} dot={false} activeDot={{ r: 4 }} isAnimationActive={!denso} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       )}
+      <p className="mt-3 text-[11px] text-tinta/40">
+        {serie.length > 0 && `${fmtFecha(serie[0].fecha)} — ${fmtFecha(serie.at(-1)!.fecha)} · `}
+        {serie.length} puntos
+      </p>
     </article>
   );
 }

@@ -35,14 +35,23 @@ function extraerSerie(json: unknown): Punto[] {
   return [...unica.entries()].map(([fecha, valor]) => ({ fecha, valor })).sort((a, b) => a.fecha.localeCompare(b.fecha));
 }
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = Number((await params).id);
   const meta = VARIABLES[id];
   if (!meta) return fail(`Variable ${id} no habilitada`, 404);
 
-  const hasta = new Date();
-  const desde = new Date(hasta.getTime() - 400 * 86_400_000);
-  const q = `desde=${desde.toISOString().slice(0, 10)}&hasta=${hasta.toISOString().slice(0, 10)}&limit=1000`;
+  // desde/hasta son opcionales: por defecto trae los últimos 400 días (alcanza para
+  // KPIGrid, que solo usa el último valor). /series pide un rango de hasta 6 años
+  // para graficar el histórico, así que acepta overrides por query string.
+  const { searchParams } = new URL(req.url);
+  const hastaParam = searchParams.get("hasta");
+  const desdeParam = searchParams.get("desde");
+  const hasta = hastaParam && /^\d{4}-\d{2}-\d{2}$/.test(hastaParam) ? hastaParam : new Date().toISOString().slice(0, 10);
+  const desde =
+    desdeParam && /^\d{4}-\d{2}-\d{2}$/.test(desdeParam)
+      ? desdeParam
+      : new Date(Date.now() - 400 * 86_400_000).toISOString().slice(0, 10);
+  const q = `desde=${desde}&hasta=${hasta}&limit=3000`;
   const url = `https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias/${id}?${q}`;
 
   try {
