@@ -14,6 +14,15 @@
   --color-pos: #22C55E;
   --color-neg: #EF4444;
 
+  /* Colores de serie para /series — paleta categórica validada (dataviz skill):
+     banda de luminosidad y croma OK, separación CVD par-a-par OK sobre fondo crema.
+     Uno por categoría (no por serie individual): el título de cada tarjeta ya
+     identifica la serie, el color es para escanear la sección de un vistazo. */
+  --color-serie-dolar: #2a78d6;    /* azul   — Dólar */
+  --color-serie-tasas: #eb6834;    /* naranja — Tasas y reservas (BCRA) */
+  --color-serie-precios: #1baf7a;  /* aqua   — Precios y expectativas */
+  --color-serie-riesgo: #008300;   /* verde  — Riesgo país */
+
   --font-serif: var(--font-dm-serif), "Playfair Display", Georgia, serif;
   --font-sans: var(--font-dm-sans), "Inter", system-ui, sans-serif;
   --font-mono: var(--font-dm-mono), ui-monospace, "SFMono-Regular", monospace;
