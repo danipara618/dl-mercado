@@ -3,10 +3,10 @@
 //  y con qué color/unidad. Agregar una serie nueva es sumar una entrada acá.
 // ============================================================
 
-export type CategoriaSerie = "dolar" | "tasas" | "precios" | "riesgo" | "bonos";
+export type CategoriaSerie = "dolar" | "tasas" | "precios" | "riesgo";
 
 /** Cómo se interpreta la respuesta JSON del endpoint para sacar la serie de puntos. */
-export type TipoSerie = "bcra" | "dolar" | "riesgo" | "icl" | "inflacion" | "docta-bono" | "docta-fci";
+export type TipoSerie = "bcra" | "dolar" | "riesgo" | "icl" | "inflacion";
 
 export interface SerieDef {
   slug: string;
@@ -26,7 +26,6 @@ export const CATEGORIAS: Record<CategoriaSerie, { titulo: string; color: string;
   tasas: { titulo: "Tasas y reservas (BCRA)", color: "#eb6834", subtitulo: "Variables monetarias del BCRA (API Estadísticas v4.0) — últimos 6 años." },
   precios: { titulo: "Precios y expectativas", color: "#1baf7a", subtitulo: "Inflación observada y esperada, y tasas de plazo fijo." },
   riesgo: { titulo: "Riesgo país", color: "#008300", subtitulo: "Spread EMBI Argentina — últimos 6 años." },
-  bonos: { titulo: "Bonos y FCI (Docta)", color: "#7c4fb0", subtitulo: "Rendimiento de bonos soberanos y valor de cuotaparte de fondos — vía Docta Capital." },
 };
 
 /**
@@ -42,7 +41,6 @@ export const CATEGORIAS: Record<CategoriaSerie, { titulo: string; color: string;
 const RAMPA_DOLAR = ["#2a78d6", "#2a65af", "#295389", "#264266", "#223044", "#1c1f24"];
 const RAMPA_TASAS = ["#eb6834", "#c05932", "#964b2f", "#6e3c2a", "#492e24", "#251f1d"];
 const RAMPA_PRECIOS = ["#1baf7a", "#298660", "#2a6047"];
-const RAMPA_BONOS = ["#7c4fb0", "#614287", "#483560"];
 
 function colorRampa(rampa: string[], i: number): string {
   return rampa[i % rampa.length];
@@ -59,12 +57,6 @@ function isoHace(dias: number): string {
 }
 function bcraUrl(id: number): string {
   return `/api/bcra/${id}?desde=${isoHace(SEIS_ANIOS_DIAS)}&hasta=${isoHoy()}`;
-}
-function doctaBonoUrl(symbol: string): string {
-  return `/api/docta/bonds/${symbol}?desde=${isoHace(SEIS_ANIOS_DIAS)}&hasta=${isoHoy()}`;
-}
-function doctaFciUrl(fondo: string): string {
-  return `/api/docta/fci/${encodeURIComponent(fondo)}?desde=${isoHace(SEIS_ANIOS_DIAS)}&hasta=${isoHoy()}`;
 }
 
 export const CATALOGO: SerieDef[] = [
@@ -93,9 +85,4 @@ export const CATALOGO: SerieDef[] = [
 
   // --- Riesgo país (histórico diario completo, argentinadatos.com) --
   { slug: "riesgo-pais", categoria: "riesgo", titulo: "Riesgo país (EMBI)", unidad: "pb", tipo: "riesgo", endpoint: "/api/riesgo-pais/historico", color: CATEGORIAS.riesgo.color, decimales: 0, refreshMs: 300_000 },
-
-  // --- Bonos y FCI (Docta Capital) ------------------------------------
-  { slug: "bono-gd30", categoria: "bonos", titulo: "Bono GD30 (rendimiento)", unidad: "% TIR", tipo: "docta-bono", endpoint: doctaBonoUrl("GD30"), color: colorRampa(RAMPA_BONOS, 0), decimales: 2, refreshMs: 1_800_000 },
-  { slug: "bono-al30", categoria: "bonos", titulo: "Bono AL30 (rendimiento)", unidad: "% TIR", tipo: "docta-bono", endpoint: doctaBonoUrl("AL30"), color: colorRampa(RAMPA_BONOS, 1), decimales: 2, refreshMs: 1_800_000 },
-  { slug: "fci-mercado-fondo", categoria: "bonos", titulo: "Mercado Fondo - Clase A (FCI)", unidad: "$ VCP", tipo: "docta-fci", endpoint: doctaFciUrl("Mercado Fondo - Clase A"), color: colorRampa(RAMPA_BONOS, 2), decimales: 2, refreshMs: 1_800_000 },
 ];
