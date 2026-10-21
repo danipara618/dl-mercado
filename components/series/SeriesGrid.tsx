@@ -11,7 +11,7 @@ import SeriesCard from "./SeriesCard";
 import PlazoFijoCard from "./PlazoFijoCard";
 import { useDescargaTodo } from "./useDescargaTodo";
 
-const ORDEN: CategoriaSerie[] = ["dolar", "tasas", "precios", "riesgo"];
+const ORDEN: CategoriaSerie[] = ["dolar", "tasas", "precios", "riesgo", "bonos"];
 
 export default function SeriesGrid() {
   const [filtro, setFiltro] = useState<CategoriaSerie | "todos">("todos");

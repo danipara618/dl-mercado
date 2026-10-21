@@ -22,7 +22,7 @@ export function normalizarSerie(tipo: SerieDef["tipo"], raw: unknown): { serie: 
   let serie: Punto[];
   if (tipo === "dolar" || tipo === "riesgo") {
     serie = (raw as Punto[]) ?? [];
-  } else if (tipo === "bcra" || tipo === "icl") {
+  } else if (tipo === "bcra" || tipo === "icl" || tipo === "docta-bono" || tipo === "docta-fci") {
     serie = (raw as BcraSerie)?.serie ?? [];
   } else {
     serie = (raw as Indicadores)?.inflacionSerie ?? [];
