@@ -35,6 +35,11 @@ function Aviso({children}:{children:React.ReactNode}){return <div role="status" 
 const money=(v:string)=>Number(v);
 export default function CalculadorasFaciles(){
  const [modo,setModo]=useState<Modo>("sueldo");
+ useEffect(()=>{
+  const type=new URLSearchParams(window.location.search).get("tipo");
+  if(type&&ITEMS.some(item=>item.id===type))setModo(type as Modo);
+ },[]);
+
  const [inflacion,setInflacion]=useState<DatoMensual[]>([]);
  const [errorInflacion,setErrorInflacion]=useState("");
  const [cargando,setCargando]=useState(true);
