@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ChartNoAxesCombined, Download, ExternalLink } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import SalarioRealChart from "@/components/SalarioRealChart";
 import { MACRO_INDICADORES, MACRO_TABS, type MacroTab, type MacroIndicador } from "@/lib/macroDefiniciones";
 
 type Punto={fecha:string;valor:number};
@@ -97,7 +98,7 @@ export default function TableroMacro(){
      </div>
    </section>
    <section role="tabpanel" aria-label={tab}>
-     <div className="grid gap-5 lg:grid-cols-2">{data.map(cfg=><MacroCard key={cfg.id} cfg={cfg}/>)}</div>
+     <div className="grid gap-5 lg:grid-cols-2">{tab==="Trabajo e ingresos"&&<SalarioRealChart/>}{data.map(cfg=><MacroCard key={cfg.id} cfg={cfg}/>)}</div>
    </section>
    <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-oliva-100 p-5">
      <p className="max-w-xl text-sm text-tinta/70">¿Querés comparar poder adquisitivo, inflación acumulada o canastas en términos reales? Esas operaciones están separadas del tablero.</p>
