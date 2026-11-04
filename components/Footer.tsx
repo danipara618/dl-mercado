@@ -23,7 +23,7 @@ export default function Footer() {
             <Link className="block hover:text-oliva" href="/">Mercado</Link>
             <Link className="block hover:text-oliva" href="/series">Series</Link>
             <Link className="block hover:text-oliva" href="/#macro">Macro</Link>
-            <Link className="block hover:text-oliva" href="/#herramientas">Herramientas</Link>
+            <Link className="block hover:text-oliva" href="/calculadoras">Calculadoras fáciles</Link>
             <Link className="block hover:text-oliva" href="/sobre-mi">Sobre mí</Link>
           </div>
         </div>

@@ -69,12 +69,13 @@ export default function Home() {
         <EquitySection />
         <GlobalMarkets />
 
-        <section aria-labelledby="herramientas">
+        <section id="herramientas" aria-labelledby="herramientas">
           <SectionTitle
             id="herramientas"
             title="Herramientas"
             subtitle="Calculadoras para convertir datos económicos en decisiones y comparaciones más claras."
           />
+          <Link href="/calculadoras" className="mb-5 inline-flex items-center gap-2 rounded-full bg-oliva px-5 py-3 text-sm font-bold text-white">Elegir una calculadora fácil <ArrowRight size={16}/></Link>
           <div className="grid gap-5 md:grid-cols-2">
             <Link
               href="/calculadoras/inflacion"
