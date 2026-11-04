@@ -20,6 +20,10 @@ const RiskChart = dynamic(() => import("@/components/RiskChart"), {
   ssr: true,
   loading: () => <Skeleton className="h-[380px] w-full rounded-2xl" />,
 });
+const MacroDashboard = dynamic(() => import("@/components/MacroDashboard"), {
+  ssr: true,
+  loading: () => <Skeleton className="h-[520px] w-full rounded-3xl" />,
+});
 const BondsSection = dynamic(() => import("@/components/BondsSection"), {
   ssr: true,
   loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
@@ -59,13 +63,13 @@ export default function Home() {
           <RiskChart />
         </section>
 
-        <section id="macro" className="rounded-3xl border border-crema-200 bg-white p-6 sm:p-8"><p className="text-xs font-bold uppercase tracking-[.18em] text-oliva">Economía argentina</p><h2 className="mt-2 font-serif text-3xl">Nuevo Tablero Macro</h2><p className="mt-3 max-w-3xl text-sm leading-relaxed text-tinta/65">IPC, canastas, EMAE, industria, salarios, mercado laboral, comercio exterior, pobreza y PIB por habitante. Datos históricos y visualizaciones en un solo lugar, sin calculadoras.</p><Link href="/tablero-macro" className="mt-5 inline-flex items-center gap-2 rounded-full bg-oliva px-5 py-2.5 text-sm font-bold text-white">Explorar Tablero Macro <ArrowRight size={16}/></Link></section>
+        <div id="macro" className="scroll-mt-6"><MacroDashboard /></div>
         <BondsSection />
         <PesosSection />
         <EquitySection />
         <GlobalMarkets />
 
-        <section id="herramientas" aria-labelledby="herramientas">
+        <section aria-labelledby="herramientas">
           <SectionTitle
             id="herramientas"
             title="Herramientas"
@@ -101,7 +105,6 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rounded-2xl border border-crema-200 bg-oliva-100 p-5"><h2 className="font-serif text-2xl">Calculadoras económicas</h2><p className="mt-2 text-sm text-tinta/65">Salario real, inflación acumulada, canasta básica en términos reales, brecha regional de inflación y difusión de aumentos.</p><Link href="/calculadoras" className="mt-4 inline-flex items-center gap-2 rounded-full bg-oliva px-5 py-2 text-sm font-semibold text-white">Ver todas las calculadoras <ArrowRight size={14}/></Link></div>
         <EducationBlock />
         <HomeAbout />
       </main>
