@@ -24,7 +24,7 @@ function MacroCard({cfg}:{cfg:MacroIndicador}){
  useEffect(()=>{
    let active=true;
    setLoading(true);setError("");setResponse(null);setSelected("");
-   const endpoint=cfg.fuente==="indec"||cfg.fuente==="bm"?"/api/macro/"+cfg.id:cfg.ruta!;
+   const endpoint=cfg.fuente==="indec"||cfg.fuente==="bm"?"/api/macro/"+cfg.id:cfg.ruta!+(cfg.fuente==="bcra"?"?desde="+new Date(Date.now()-6*365*86400000).toISOString().slice(0,10):"");
    fetch(endpoint,{cache:"no-store"}).then(async(r)=>{
      const json=await r.json() as MacroResponse&BcraResponse;
      if(!r.ok) throw Error(json.error||"Fuente no disponible");
@@ -33,7 +33,7 @@ function MacroCard({cfg}:{cfg:MacroIndicador}){
        return {fuente:"BCRA",series:[{id:cfg.id,etiqueta:cfg.titulo,unidad:json.data.unidad||"",puntos:json.data.serie||[]}]};
      }
      if(cfg.fuente==="mercado"){
-       const values=Array.isArray(json)?json as unknown as Punto[]:[];
+       const values=json.ok&&Array.isArray(json.data)?json.data as unknown as Punto[]:[];
        return {fuente:"ArgentinaDatos — EMBI",series:[{id:cfg.id,etiqueta:cfg.titulo,unidad:"pb",puntos:values}]};
      }
      return json;
