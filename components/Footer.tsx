@@ -21,9 +21,9 @@ export default function Footer() {
           <b className="text-xs uppercase tracking-wider">Explorar</b>
           <div className="mt-3 space-y-2 text-sm text-tinta/60">
             <Link className="block hover:text-oliva" href="/">Mercado</Link>
-            <Link className="block hover:text-oliva" href="/series">Series</Link>
-            <Link className="block hover:text-oliva" href="/#macro">Macro</Link>
-            <Link className="block hover:text-oliva" href="/#herramientas">Herramientas</Link>
+            <Link className="block hover:text-oliva" href="/tablero-macro">Tablero Macro</Link>
+            <Link className="block hover:text-oliva" href="/calculadoras">Calculadoras</Link>
+            <Link className="block hover:text-oliva" href="/tablero-macro">Indicadores</Link>
             <Link className="block hover:text-oliva" href="/sobre-mi">Sobre mí</Link>
           </div>
         </div>
@@ -40,7 +40,7 @@ export default function Footer() {
         <div>
           <b className="text-xs uppercase tracking-wider">Fuentes de datos</b>
           <p className="mt-3 text-xs leading-relaxed text-tinta/55">
-            dolarapi.com, argentinadatos.com, BCRA API Estadísticas v4.0, data912.com y Yahoo Finance. Las metodologías específicas se detallan en cada indicador o herramienta.
+            INDEC, BCRA, Banco Mundial, ArgentinaDatos, DolarAPI, Data912 y Yahoo Finance. Las metodologías específicas se detallan en cada indicador o herramienta.
           </p>
         </div>
 
