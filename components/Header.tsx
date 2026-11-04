@@ -33,7 +33,7 @@ export default function Header() {
             <Link href="#macro" className="group flex items-center justify-between rounded-xl border border-crema-200 bg-white/65 px-4 py-3 text-sm font-bold text-oliva">
               <span className="flex items-center gap-2"><BarChart3 size={17}/> Tablero macro</span><ArrowRight size={15} className="transition group-hover:translate-x-1"/>
             </Link>
-            <Link href="#herramientas" className="group flex items-center justify-between rounded-xl border border-crema-200 bg-white/65 px-4 py-3 text-sm font-bold text-oliva">
+            <Link href="/calculadoras" className="group flex items-center justify-between rounded-xl border border-crema-200 bg-white/65 px-4 py-3 text-sm font-bold text-oliva">
               <span className="flex items-center gap-2"><Calculator size={17}/> Calculadoras</span><ArrowRight size={15} className="transition group-hover:translate-x-1"/>
             </Link>
           </div>
