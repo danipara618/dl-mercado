@@ -1,14 +1,14 @@
 import Link from "next/link";
-import {Wallet,TrendingUp,ShoppingBasket,MapPin,ChartColumnIncreasing,House,Calculator,Landmark} from "lucide-react";
+import {Wallet,TrendingUp,House,Calculator,Landmark} from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 const NUEVAS=[
  {href:"/calculadoras/precios-ingresos?tipo=sueldo",icon:Wallet,titulo:"¿Mi sueldo le ganó a la inflación?",detalle:"Conocé si ganaste o perdiste poder de compra."},
  {href:"/calculadoras/precios-ingresos?tipo=inflacion",icon:TrendingUp,titulo:"¿Cuánto aumentaron los precios?",detalle:"Compará dos meses y cuánto alcanza tu dinero."},
- {href:"/calculadoras/precios-ingresos?tipo=canasta",icon:ShoppingBasket,titulo:"¿Cuánto aumentó la canasta básica?",detalle:"Compará su costo con la inflación."},
- {href:"/calculadoras/precios-ingresos?tipo=regiones",icon:MapPin,titulo:"¿Dónde aumentaron más los precios?",detalle:"Elegí dos regiones y comparalas."},
- {href:"/calculadoras/precios-ingresos?tipo=productos",icon:ChartColumnIncreasing,titulo:"¿Qué productos están aumentando?",detalle:"Descubrí qué divisiones del IPC subieron más."},
+
+
+
 ];
 const OTRAS=[
  {href:"/calculadoras/inflacion",icon:TrendingUp,titulo:"¿Cuánto vale hoy una suma de dinero?",detalle:"Actualizá un monto antiguo por inflación."},
@@ -17,7 +17,7 @@ const OTRAS=[
  {href:"/calculadoras/retiro",icon:Landmark,titulo:"¿Cuánto necesito para mi retiro?",detalle:"Planeá un objetivo de capital futuro."},
  {href:"/calculadoras/nodocente",icon:Wallet,titulo:"¿Cuánto cobraría como no docente?",detalle:"Calculá una liquidación del convenio 366/06."},
 ];
-export const metadata={title:"Calculadoras fáciles | DL Mercado",description:"Herramientas para comparar sueldo e inflación, canasta básica, regiones, alquileres, ahorro y retiro."};
+export const metadata={title:"Calculadoras fáciles | DL Mercado",description:"Herramientas para comparar sueldo e inflación, alquileres, ahorro y retiro."};
 export default function Calculadoras(){
  return <><Header/><main className="mx-auto max-w-7xl space-y-9 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
  <SectionTitle as="h1" title="Calculadoras" subtitle="Respondé preguntas sobre tu dinero en pocos pasos, sin tener que saber economía. Las fuentes y los cálculos se explican cuando los necesites."/>
