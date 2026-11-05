@@ -1,7 +1,8 @@
 "use client";
 // Tabla genérica: tarjeta blanca, cabecera beige con texto verde, zebra, orden por columna, "ver todos"
 import { useMemo, useState, type ReactNode } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download } from "lucide-react";
+import { descargarCSV } from "@/lib/descargarCSV";
 import { ErrorNote, Skeleton } from "./States";
 
 export interface Column<T> {
@@ -11,6 +12,7 @@ export interface Column<T> {
   render: (row: T) => ReactNode;
   /** Valor para ordenar; si falta, la columna no es ordenable */
   sortValue?: (row: T) => number | string | null;
+  exportValue?: (row: T) => string | number | null;
   className?: string;
   /** Oculta la columna en pantallas chicas; se muestra desde sm en adelante. */
   hideOnMobile?: boolean;
@@ -118,6 +120,16 @@ export default function DataTable<T>({
           </tbody>
         </table>
       </div>
+      {ordenadas.length > 0 && <div className="flex items-center justify-end border-t border-crema-200 px-4 py-3">
+        <button type="button" onClick={() => descargarCSV(caption || "dl-mercado-tabla", columns.map(c=>c.header),
+          ordenadas.map(r=>columns.map(c=>{
+            const v=c.exportValue?.(r) ?? c.sortValue?.(r);
+            return v ?? "";
+          })))}
+          className="inline-flex items-center gap-2 rounded-full border border-oliva/40 px-4 py-2 text-xs font-bold text-oliva hover:bg-oliva-100">
+          <Download size={15}/> Descargar tabla (CSV)
+        </button>
+      </div>}
       {ordenadas.length > pageSize && (
         <button
           type="button"
