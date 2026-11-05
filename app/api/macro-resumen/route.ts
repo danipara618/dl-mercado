@@ -10,6 +10,9 @@ type Item={id:string;titulo:string;subtitulo:string;unidad:string;fuente:string;
 type Def={id:string;titulo:string;subtitulo:string;unidad:string;servicio:string;filtros:Record<string,string>;valor?:string;frecuencia?:"mensual"|"trimestral"|"semestral"};
 const defs:Def[]=[
  {id:"ipc",titulo:"Inflación mensual",subtitulo:"IPC nacional · variación mensual",unidad:"%",servicio:"ipc_nacional",filtros:{clasificador:"IPC",nivel:"Nivel General",codigo:"0",descripcion:"Nivel general",indicador:"IPC base Dic16=100",tipo_de_indicador:"v_m",tipo_de_indicador_descripcion:"Variación porcentual respecto del período anterior",region:"Nacional",unidad_de_medida:"Porcentaje"}},
+ {id:"ipc-anual",titulo:"Inflación interanual",subtitulo:"IPC nacional · variación frente a igual mes del año anterior",unidad:"%",servicio:"ipc_nacional",filtros:{clasificador:"IPC",nivel:"Nivel General",codigo:"0",descripcion:"Nivel general",indicador:"IPC base Dic16=100",tipo_de_indicador:"v_ia",tipo_de_indicador_descripcion:"Variación porcentual respecto del mismo período del año anterior",region:"Nacional",unidad_de_medida:"Porcentaje"}},
+ {id:"ipc-alimentos",titulo:"Precios de alimentos y bebidas",subtitulo:"IPC nacional · división alimentos y bebidas no alcohólicas",unidad:"%",servicio:"ipc_nacional",filtros:{descripcion:"Alimentos y bebidas no alcohólicas",tipo_de_indicador:"v_m",tipo_de_indicador_descripcion:"Variación porcentual respecto del período anterior",region:"Nacional",unidad_de_medida:"Porcentaje"}},
+ {id:"cba",titulo:"Canasta básica alimentaria",subtitulo:"GBA · adulto equivalente · pesos mensuales",unidad:"ARS",servicio:"valorizacion_canastas_cba_cbt",filtros:{clasificador:"CBA y CBT",nivel:"Adulto equivalente",codigo:"CBA",descripcion:"Canasta Basica Alimentaria",indicador:"Canasta",tipo_de_indicador:"CBA",tipo_de_indicador_descripcion:"Valores mensuales por adulto equivalente, expresados en pesos",region:"GBA",unidad_de_medida:"Pesos argentinos"}},
  {id:"canasta",titulo:"Canasta básica total",subtitulo:"GBA · adulto equivalente · pesos mensuales",unidad:"ARS",servicio:"valorizacion_canastas_cba_cbt",filtros:{clasificador:"CBA y CBT",nivel:"Adulto equivalente",codigo:"CBT",descripcion:"Canasta Basica Total",indicador:"Canasta",tipo_de_indicador:"CBT",tipo_de_indicador_descripcion:"Valores mensuales por adulto equivalente, expresados en pesos",region:"GBA",unidad_de_medida:"Pesos argentinos"}},
  {id:"emae",titulo:"Actividad económica",subtitulo:"EMAE · serie desestacionalizada · base 2004=100",unidad:"Índice",servicio:"estimador-mensual-de-actividad-economica-nivel-general",filtros:{tipo_de_indicador:"Índice base 2004=100",tipo_de_indicador_descripcion:"Índice serie desestacionalizada"}},
  {id:"industria",titulo:"Producción industrial",subtitulo:"IPI manufacturero · nivel general · serie original",unidad:"Índice",servicio:"ipi_manufacturero",filtros:{descripcion:"Nivel general",serie:"Original",tipo_de_indicador:"Índice"}},
@@ -61,7 +64,7 @@ async function serie(d:Def):Promise<Item> {
      const row=v as Row;
      if(Object.entries(d.filtros).some(([key,value])=>texto(row[key])!==value))continue;
      const f=fecha(row,d.frecuencia),valor=numero(row[d.valor||"valor"]);
-     if(f&&valor!==null&&!fechas.has(f)){points.push({fecha:f,valor});fechas.add(f);}
+     if(f&&valor!==null){if(fechas.has(f))return sinDatos(d,"Hay registros duplicados para el período; no se publican agregaciones ambiguas.");points.push({fecha:f,valor});fechas.add(f);}
    }
    points.sort((a,b)=>a.fecha.localeCompare(b.fecha));
    if(points.length<2)return sinDatos(d,"El servicio no devolvió suficientes períodos comparables.");
