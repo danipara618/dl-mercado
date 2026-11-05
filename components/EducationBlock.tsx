@@ -1,2 +1,22 @@
 import {ArrowRight,BookOpen,GraduationCap} from "lucide-react";
-export default function EducationBlock(){return <section id="cursos" className="rounded-3xl bg-[#172511] p-7 text-white sm:p-10"><div className="flex flex-wrap items-end justify-between gap-5"><div><p className="font-serif text-lg text-[#D7DEB8]">EconoClases</p><h2 className="font-serif text-4xl">CURSOS Y CLASES</h2><p className="mt-3 max-w-2xl text-sm text-white/65">Economía explicada con ejercicios, datos y herramientas. Materiales para aprender a tu ritmo y acompañamiento para materias universitarias.</p></div><a href="https://econoclases-academy.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-crema px-5 py-2.5 text-sm font-bold text-oliva">Conocer la academia <ArrowRight size={15}/></a></div><div className="mt-8 grid gap-4 md:grid-cols-2"><a href="https://econoclases-academy.vercel.app/" target="_blank" rel="noopener noreferrer" className="rounded-2xl bg-white/10 p-6 ring-1 ring-white/10"><BookOpen/><h3 className="mt-4 font-serif text-2xl">EconoClases Academy · Cursos online</h3><p className="mt-2 text-sm text-white/65">Cursos de economía, finanzas y datos con clases grabadas, ejercicios y materiales para estudiar a tu ritmo.</p><span className="mt-4 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white/70">Ver catálogo de cursos <ArrowRight size={13} className="inline-block align-middle" /></span></a><div className="rounded-2xl bg-white/10 p-6 ring-1 ring-white/10"><GraduationCap/><h3 className="mt-4 font-serif text-2xl">Clases particulares</h3><p className="mt-2 text-sm text-white/65">Acompañamiento en macroeconomía, finanzas, estadística y econometría.</p><a href="https://econoclases.vercel.app/" target="_blank" rel="noopener noreferrer" className="mt-4 inline-block text-sm font-bold underline underline-offset-4">Consultar disponibilidad</a></div></div></section>}
+import Link from "next/link";
+export default function EducationBlock(){
+ return <section id="cursos" className="rounded-3xl bg-[#172511] p-7 text-white sm:p-10">
+  <p className="font-serif text-lg text-[#D7DEB8]">EconoClases</p>
+  <h2 className="mt-2 font-serif text-4xl">CLASES Y CURSOS</h2>
+  <p className="mt-3 max-w-2xl text-sm text-white/70">Aprender economía con explicaciones claras, ejercicios y herramientas útiles.</p>
+  <div className="mt-7 grid gap-4 md:grid-cols-2">
+   <article className="rounded-2xl bg-white/10 p-6 ring-1 ring-white/10">
+    <GraduationCap size={25}/><h3 className="mt-4 font-serif text-2xl">Clases particulares</h3>
+    <p className="mt-2 text-sm text-white/75">Macroeconomía, estadística, econometría y finanzas. Acompañamiento para tus materias universitarias.</p>
+    <Link href="/clases" className="mt-5 inline-flex items-center gap-2 rounded-full bg-crema px-4 py-2 text-sm font-bold text-oliva">Consultar clases <ArrowRight size={15}/></Link>
+   </article>
+   <article className="rounded-2xl bg-white/10 p-6 ring-1 ring-white/10">
+    <BookOpen size={25}/><h3 className="mt-4 font-serif text-2xl">Cursos online</h3>
+    <span className="mt-3 inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white/80">Próximamente</span>
+    <p className="mt-3 text-sm text-white/75">Estamos preparando los contenidos. Todavía no hay cursos disponibles para inscribirse.</p>
+    <Link href="/cursos" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-white underline underline-offset-4">Conocer el proyecto <ArrowRight size={15}/></Link>
+   </article>
+  </div>
+ </section>;
+}
