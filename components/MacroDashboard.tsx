@@ -94,16 +94,16 @@ export default function MacroDashboard(){
   {loading&&<div className="grid gap-4 sm:grid-cols-2">{Array.from({length:4},(_,i)=><div key={i} className="h-72 animate-pulse rounded-2xl border border-crema-200 bg-white/60"/>)}</div>}
   {error&&<p role="status" className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">{error}</p>}
   {data && <>
-    {categorias.map(grupo=><div key={grupo.titulo}>
-      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
-        <div><h3 className="font-serif text-2xl text-tinta">{grupo.titulo}</h3><p className="mt-1 text-sm text-tinta/60">{grupo.sub}</p></div>
-      </div>
-      <div className="grid gap-5 lg:grid-cols-2">
-        {grupo.ids.map(id=>{const item=data.indicadores.find(i=>i.id===id);return item?<Tarjeta key={id} item={item}/>:null;})}
-      </div>
-    </div>)}
+    {categorias.map(grupo=>{
+      const disponibles=grupo.ids.map(id=>data.indicadores.find(i=>i.id===id)).filter((item):item is Indicador=>!!item&&item.estado==="ok");
+      if(!disponibles.length)return null;
+      return <div key={grupo.titulo}>
+       <div className="mb-4"><h3 className="font-serif text-2xl text-tinta">{grupo.titulo}</h3><p className="mt-1 text-sm text-tinta/60">{grupo.sub}</p></div>
+       <div className="grid gap-5 lg:grid-cols-2">{disponibles.map(item=><Tarjeta key={item.id} item={item}/>)}</div>
+      </div>;
+    })}
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-oliva-100 p-5 text-xs text-tinta/65">
-      <p className="max-w-xl">{data.nota} Consulta: {new Date(data.actualizado).toLocaleDateString("es-AR")}.</p>
+      <p className="max-w-xl">{data.nota} Consulta: {new Date(data.actualizado).toLocaleDateString("es-AR")}. Las series pendientes de validación se omiten del tablero para no confundir al visitante.</p>
       <a href="/observatorio" className="inline-flex items-center gap-1 font-bold text-oliva">Consultar datos completos del INDEC <ArrowUpRight size={16}/></a>
     </div>
   </>}
