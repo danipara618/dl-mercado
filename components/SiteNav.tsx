@@ -1,3 +1,17 @@
 import Link from "next/link";
-const LINKS=[{href:"/",label:"Mercado"},{href:"/series",label:"Series"},{href:"/observatorio",label:"INDEC"},{href:"/#macro",label:"Macro"},{href:"/calculadoras",label:"Calculadoras"},{href:"/notas",label:"Notas"},{href:"https://econoclases-academy.vercel.app/",label:"Cursos online",externo:true},{href:"/sobre-mi",label:"Sobre mí"}];
-export default function SiteNav({activo}:{activo?:string}){return <nav aria-label="Secciones" className="flex max-w-full items-center gap-5 overflow-x-auto whitespace-nowrap pb-1 text-xs font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:text-sm">{LINKS.map(l=>l.externo?<a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="text-tinta/60 transition hover:text-oliva">{l.label}</a>:<Link key={l.href} href={l.href} aria-current={activo===l.href?"page":undefined} className={activo===l.href?"text-oliva underline decoration-2 underline-offset-8":"text-tinta/60 transition hover:text-oliva"}>{l.label}</Link>)}</nav>}
+const LINKS=[
+ {href:"/",label:"Inicio"},
+ {href:"/mercados",label:"Mercados"},
+ {href:"/economia",label:"Economía argentina"},
+ {href:"/calculadoras",label:"Calculadoras"},
+ {href:"/notas",label:"Notas"},
+ {href:"/clases",label:"Clases particulares"},
+ {href:"/cursos",label:"Cursos"},
+ {href:"/sobre-mi",label:"Sobre mí"},
+];
+export default function SiteNav({activo}:{activo?:string}){
+ return <nav aria-label="Navegación principal" className="flex max-w-full items-center gap-4 overflow-x-auto whitespace-nowrap pb-1 text-xs font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-5 sm:text-sm">
+  {LINKS.map(l=><Link key={l.href} href={l.href} aria-current={activo===l.href?"page":undefined}
+   className={activo===l.href?"text-oliva underline decoration-2 underline-offset-8":"text-tinta/60 transition hover:text-oliva"}>{l.label}</Link>)}
+ </nav>;
+}
