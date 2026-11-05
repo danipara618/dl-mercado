@@ -1,6 +1,8 @@
 "use client";
 // Riesgo país: línea verde oscuro, grilla horizontal sutil, umbral punteado, último dato destacado
 import { useMemo, useState } from "react";
+import { Download } from "lucide-react";
+import { descargarCSV } from "@/lib/descargarCSV";
 import {
   CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
@@ -102,6 +104,8 @@ export default function RiskChart() {
             </button>
           ))}
         </div>
+        <div className="flex flex-wrap items-center gap-3">
+        {stats && <button type="button" onClick={()=>descargarCSV("riesgo-pais",["fecha","puntos_basicos","fuente"],serie.map(p=>[p.fecha,p.valor,"ArgentinaDatos / EMBI Argentina"]))} className="inline-flex items-center gap-2 rounded-full border border-oliva/40 px-3 py-2 text-xs font-bold text-oliva hover:bg-oliva-100"><Download size={15}/> CSV</button>}
         {stats && (
           <dl className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
             <div className="flex gap-1.5"><dt className="text-tinta/55">Var. período</dt><dd><Change valor={stats.varAbs} tipo="abs" dec={0} sufijo=" pb" invertir /></dd></div>
@@ -109,6 +113,7 @@ export default function RiskChart() {
             <div className="flex gap-1.5"><dt className="text-tinta/55">Mín.</dt><dd className="font-mono tabular">{fmtNum(stats.min, 0)}</dd></div>
           </dl>
         )}
+        </div>
       </div>
 
       {error && !data ? (
