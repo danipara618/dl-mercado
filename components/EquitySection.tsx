@@ -1,5 +1,7 @@
 "use client";
 import{useEffect,useMemo,useState}from"react";
+import {Download} from "lucide-react";
+import {descargarCSV} from "@/lib/descargarCSV";
 import{CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis}from"recharts";
 import SectionTitle from"./SectionTitle";
 import DataTable,{type Column}from"./DataTable";
@@ -78,7 +80,9 @@ function AssetDetail({row,market,onClose}:{row:Cotizacion;market:string;onClose:
     <div><p className="text-xs font-extrabold uppercase tracking-[.14em] text-oliva">Detalle del activo</p><h3 className="mt-1 font-serif text-2xl">{row.symbol}</h3><p className="text-sm text-tinta/55">{sectores[row.symbol]??"Otros"} · Último {fmtNum(row.last,2)} · <Change valor={row.pctChange}/></p></div>
     <button onClick={onClose} className="rounded-full border border-crema-200 px-3 py-1 text-xs font-bold text-tinta/60">Cerrar</button>
    </div>
-   <div className="mt-4 flex flex-wrap gap-2">{["1m","6m","1y","5y"].map(x=><button key={x} onClick={()=>setRango(x)} className={`rounded-full border px-3 py-1 text-xs font-bold ${rango===x?"border-oliva bg-oliva text-white":"border-oliva/30 text-oliva"}`}>{x}</button>)}</div>
+   <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div className="flex flex-wrap gap-2">{["1m","6m","1y","5y"].map(x=><button key={x} onClick={()=>setRango(x)} className={`rounded-full border px-3 py-1 text-xs font-bold ${rango===x?"border-oliva bg-oliva text-white":"border-oliva/30 text-oliva"}`}>{x}</button>)}</div>
+     <button type="button" disabled={!serie.length} onClick={()=>descargarCSV("dl-mercado-"+row.symbol+"-"+rango,["fecha","precio","ticker","fuente"],serie.map(p=>[p.fecha,p.valor,row.symbol,"Yahoo Finance"]))} className="inline-flex items-center gap-1.5 rounded-full border border-oliva/40 px-3 py-2 text-xs font-bold text-oliva disabled:opacity-30"><Download size={14}/> CSV</button>
+   </div>
    <div className="mt-4 h-72">
     {loading?<div className="grid h-full place-items-center text-sm text-tinta/45">Cargando serie…</div>:error||!serie.length?<div className="grid h-full place-items-center text-center text-sm text-tinta/45">No hay serie disponible para este activo en la fuente histórica.</div>:
     <ResponsiveContainer width="100%" height="100%"><LineChart data={serie} margin={{top:10,right:12,left:0,bottom:0}}><CartesianGrid vertical={false} strokeOpacity={.12}/><XAxis dataKey="fecha" minTickGap={38} tick={{fontSize:11}}/><YAxis width={62} tick={{fontSize:11}} domain={["auto","auto"]} tickFormatter={(v:number)=>fmtNum(v,0)}/><Tooltip formatter={(v:number)=>[fmtNum(v,2),"Precio"]}/><Line type="monotone" dataKey="valor" stroke="#2C3A22" strokeWidth={2.2} dot={false} activeDot={{r:4}}/></LineChart></ResponsiveContainer>}
