@@ -20,10 +20,12 @@ export default function Footer() {
         <div>
           <b className="text-xs uppercase tracking-wider">Explorar</b>
           <div className="mt-3 space-y-2 text-sm text-tinta/60">
-            <Link className="block hover:text-oliva" href="/">Mercado</Link>
-            <Link className="block hover:text-oliva" href="/series">Series</Link>
-            <Link className="block hover:text-oliva" href="/#macro">Macro</Link>
-            <Link className="block hover:text-oliva" href="/calculadoras">Calculadoras fáciles</Link>
+            <Link className="block hover:text-oliva" href="/">Inicio</Link>
+            <Link className="block hover:text-oliva" href="/mercados">Mercados</Link>
+            <Link className="block hover:text-oliva" href="/economia">Economía argentina</Link>
+            <Link className="block hover:text-oliva" href="/calculadoras">Calculadoras</Link>
+            <Link className="block hover:text-oliva" href="/datos">Datos y descargas</Link>
+            <Link className="block hover:text-oliva" href="/notas">Mis notas</Link>
             <Link className="block hover:text-oliva" href="/sobre-mi">Sobre mí</Link>
           </div>
         </div>
@@ -31,16 +33,16 @@ export default function Footer() {
         <div>
           <b className="text-xs uppercase tracking-wider">Aprender</b>
           <div className="mt-3 space-y-2 text-sm text-tinta/60">
-            <a className="block hover:text-oliva" href="https://econoclases-academy.vercel.app/" target="_blank" rel="noopener noreferrer">EconoClases Academy</a>
-            <a className="block hover:text-oliva" href="https://econoclases.vercel.app" target="_blank" rel="noopener noreferrer">EconoClases</a>
-            <a className="block hover:text-oliva" href="mailto:daniel.lezcano.032@gmail.com?subject=Consulta%20por%20clases">Clases particulares</a>
+            <Link className="block hover:text-oliva" href="/clases">Clases particulares</Link>
+            <a className="block hover:text-oliva" href="https://econoclases.vercel.app/" target="_blank" rel="noopener noreferrer">Ir a EconoClases</a>
+            <Link className="block hover:text-oliva" href="/cursos">Cursos online · Próximamente</Link>
           </div>
         </div>
 
         <div>
           <b className="text-xs uppercase tracking-wider">Fuentes de datos</b>
           <p className="mt-3 text-xs leading-relaxed text-tinta/55">
-            dolarapi.com, argentinadatos.com, BCRA API Estadísticas v4.0, data912.com y Yahoo Finance. Las metodologías específicas se detallan en cada indicador o herramienta.
+            INDEC, BCRA, ArgentinaDatos, DolarAPI, Data912 y Yahoo Finance. Las metodologías específicas se detallan en cada indicador o herramienta.
           </p>
         </div>
 

@@ -1,115 +1,60 @@
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { ArrowRight, Calculator, ChartNoAxesCombined } from "lucide-react";
+import {ArrowRight,ChartNoAxesCombined,Calculator,CandlestickChart,NotebookPen,BookOpen,Database} from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SectionTitle from "@/components/SectionTitle";
-import KPIGrid from "@/components/KPIGrid";
-import EducationBlock from "@/components/EducationBlock";
+import HomeHighlights from "@/components/HomeHighlights";
 import HomeAbout from "@/components/HomeAbout";
-import { Skeleton } from "@/components/States";
-
-// Cada uno de estos componentes es "use client" y arrastra Recharts (gráficos de
-// línea/barra/dispersión). Importados de forma estática, Recharts queda empaquetado
-// en el JS inicial que el navegador debe bajar y ejecutar antes de poder hidratar la
-// página, aunque la mayoría de estas secciones estén debajo del pliegue. Con
-// next/dynamic cada una pasa a su propio chunk: se sigue renderizando en el servidor
-// (ssr: true, no se pierde contenido para SEO/accesibilidad) pero Recharts ya no
-// forma parte del bundle principal que bloquea la hidratación.
-const RiskChart = dynamic(() => import("@/components/RiskChart"), {
-  ssr: true,
-  loading: () => <Skeleton className="h-[380px] w-full rounded-2xl" />,
-});
-const MacroDashboard = dynamic(() => import("@/components/MacroDashboard"), {
-  ssr: true,
-  loading: () => <Skeleton className="h-[520px] w-full rounded-3xl" />,
-});
-const BondsSection = dynamic(() => import("@/components/BondsSection"), {
-  ssr: true,
-  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
-});
-const PesosSection = dynamic(() => import("@/components/PesosSection"), {
-  ssr: true,
-  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
-});
-const EquitySection = dynamic(() => import("@/components/EquitySection"), {
-  ssr: true,
-  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
-});
-const GlobalMarkets = dynamic(() => import("@/components/GlobalMarkets"), {
-  ssr: true,
-  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
-});
-
-// ISR: la fecha del encabezado se regenera cada 10 minutos; los datos se cargan en el cliente.
-export const revalidate = 600;
-
-export default function Home() {
-  return (
-    <>
-      <Header />
-      <main className="mx-auto max-w-7xl space-y-20 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
-        <section id="mercado" aria-labelledby="kpis">
-          <SectionTitle id="kpis" title="Data de mercado" subtitle="Una lectura rápida del dólar, riesgo soberano, índices y tasas." />
-          <KPIGrid />
-          <p className="mt-4 text-center text-xs text-tinta/45">Datos actualizados automáticamente según disponibilidad de cada fuente. Cotizaciones de mercado pueden presentar demora.</p>
-        </section>
-
-        <section aria-labelledby="riesgo" className="rounded-3xl border border-crema-200 bg-crema-50/60 p-4 sm:p-6">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-            <div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-oliva">Pulso soberano</p><h2 id="riesgo" className="mt-1 font-serif text-3xl">Riesgo país</h2></div>
-            <p className="max-w-md text-sm text-tinta/55">Evolución del spread EMBI Argentina, con máximos, mínimos y variación del período.</p>
-          </div>
-          <RiskChart />
-        </section>
-
-        <div id="macro" className="scroll-mt-6"><MacroDashboard /></div>
-        <BondsSection />
-        <PesosSection />
-        <EquitySection />
-        <GlobalMarkets />
-
-        <section id="herramientas" aria-labelledby="herramientas">
-          <SectionTitle
-            id="herramientas"
-            title="Herramientas"
-            subtitle="Calculadoras para convertir datos económicos en decisiones y comparaciones más claras."
-          />
-          <Link href="/calculadoras" className="mb-5 inline-flex items-center gap-2 rounded-full bg-oliva px-5 py-3 text-sm font-bold text-white">Elegir una calculadora fácil <ArrowRight size={16}/></Link>
-          <div className="grid gap-5 md:grid-cols-2">
-            <Link
-              href="/calculadoras/inflacion"
-              className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <span className="rounded-xl bg-oliva-100 p-3 text-oliva">
-                  <ChartNoAxesCombined size={24} />
-                </span>
-                <ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21} />
-              </div>
-              <h3 className="mt-6 font-serif text-2xl">Inflación y poder adquisitivo</h3>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-tinta/65">
-                Descubrí cuánto equivale hoy un monto del pasado y cuánto poder de compra perdió frente al IPC.
-              </p>
-              <p className="mt-5 text-xs font-extrabold uppercase tracking-wider text-oliva">Calcular con IPC</p>
-            </Link>
-
-            <Link href="/calculadoras/interes-compuesto" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40">
-              <div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div>
-              <h3 className="mt-6 font-serif text-2xl">Interés compuesto</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Proyectá capital y aportes mensuales, incluyendo el resultado en poder adquisitivo real.</p>
-            </Link>
-            <Link href="/calculadoras/retiro" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40">
-              <div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div>
-              <h3 className="mt-6 font-serif text-2xl">Retiro</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Estimá tu capital futuro en USD y comparalo contra un objetivo expresado en dinero de hoy.</p>
-            </Link>
-            <Link href="/calculadoras/alquiler" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40"><div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div><h3 className="mt-6 font-serif text-2xl">Alquiler</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Calculá una actualización por IPC acumulado o por el porcentaje pactado en el contrato.</p></Link><Link href="/calculadoras/nodocente" className="group rounded-2xl border border-crema-200 bg-crema-50 p-6 transition hover:-translate-y-0.5 hover:border-oliva/40"><div className="flex items-start justify-between gap-4"><span className="rounded-xl bg-oliva-100 p-3 text-oliva"><Calculator size={24}/></span><ArrowRight className="text-tinta/35 transition group-hover:translate-x-1 group-hover:text-oliva" size={21}/></div><h3 className="mt-6 font-serif text-2xl">Salario No-docente</h3><p className="mt-2 text-sm leading-relaxed text-tinta/65">Simulá la liquidación CCT 366/06 y analizá la evolución del poder adquisitivo.</p></Link>
-          </div>
-        </section>
-
-        <EducationBlock />
-        <HomeAbout />
-      </main>
-      <Footer />
-    </>
-  );
+import EducationBlock from "@/components/EducationBlock";
+import SectionTitle from "@/components/SectionTitle";
+import {listarNotas} from "@/lib/notas";
+export const revalidate=600;
+const accesos=[
+ {href:"/mercados",titulo:"Mercados",detalle:"Dólar, riesgo país, bonos, LECAP, CEDEAR, acciones y mercados internacionales.",icono:CandlestickChart},
+ {href:"/economia",titulo:"Economía argentina",detalle:"Precios, actividad, empleo, pobreza, población y comercio exterior, con datos y gráficos.",icono:ChartNoAxesCombined},
+ {href:"/calculadoras",titulo:"Calculadoras",detalle:"Respondé preguntas sobre tu sueldo, inflación, alquiler, ahorro y retiro.",icono:Calculator},
+ {href:"/notas",titulo:"Notas y análisis",detalle:"Ideas, análisis de coyuntura y economía explicada con datos.",icono:NotebookPen},
+];
+export default function Home(){
+ const notas=listarNotas().slice(0,3);
+ return <><Header activo="/"/><main className="mx-auto max-w-7xl space-y-16 px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+  <section className="rounded-3xl border border-crema-200 bg-white p-7 shadow-sm sm:p-12">
+   <p className="text-xs font-extrabold uppercase tracking-[.2em] text-oliva">Economía · Mercados · Datos</p>
+   <h1 className="mt-3 font-serif text-5xl leading-tight text-tinta sm:text-6xl">Entender la economía, sin perderse entre números.</h1>
+   <p className="mt-4 max-w-3xl text-base leading-relaxed text-tinta/65">DL Mercado reúne indicadores oficiales, información financiera y herramientas prácticas. Elegí qué querés explorar: cotizaciones, economía argentina o cómo todo esto afecta a tu dinero.</p>
+   <div className="mt-7 flex flex-wrap gap-3">
+    <Link href="/mercados" className="inline-flex items-center gap-2 rounded-full bg-oliva px-5 py-3 text-sm font-bold text-white">Ver mercados <ArrowRight size={16}/></Link>
+    <Link href="/economia" className="inline-flex items-center gap-2 rounded-full border border-oliva px-5 py-3 text-sm font-bold text-oliva">Explorar economía argentina <ArrowRight size={16}/></Link>
+   </div>
+  </section>
+  <HomeHighlights/>
+  <section className="space-y-6">
+   <SectionTitle title="Explorá DL Mercado" subtitle="Cada sección cumple una función distinta. Encontrá lo que necesitás y profundizá cuando quieras."/>
+   <div className="grid gap-4 md:grid-cols-2">
+    {accesos.map(({href,titulo,detalle,icono:Icon})=><Link href={href} key={href} className="group flex flex-col rounded-2xl border border-crema-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-oliva/50">
+     <span className="grid h-11 w-11 place-items-center rounded-xl bg-oliva-100 text-oliva"><Icon size={23}/></span>
+     <h2 className="mt-5 font-serif text-2xl">{titulo}</h2>
+     <p className="mt-2 flex-1 text-sm leading-relaxed text-tinta/65">{detalle}</p>
+     <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-oliva">Abrir sección <ArrowRight size={16}/></span>
+    </Link>)}
+   </div>
+  </section>
+  <section className="space-y-6">
+   <SectionTitle title="Mis notas" subtitle="Análisis, coyuntura y economía explicada con información verificable."/>
+   {notas.length?<div className="grid gap-4 md:grid-cols-3">
+    {notas.map(n=><Link href={`/notas/${n.slug}`} key={n.slug} className="rounded-2xl border border-crema-200 bg-white p-6 shadow-sm hover:border-oliva/50">
+     <p className="text-xs font-bold uppercase tracking-wider text-oliva">{n.categoria} · {n.fecha}</p>
+     <h3 className="mt-4 font-serif text-2xl">{n.titulo}</h3>
+     <p className="mt-3 text-sm text-tinta/60">{n.bajada}</p>
+     <span className="mt-5 inline-block text-sm font-bold text-oliva">Leer nota →</span>
+    </Link>)}
+   </div>:<p className="rounded-xl bg-crema-50 p-5 text-sm text-tinta/60">Las próximas publicaciones aparecerán en esta sección.</p>}
+   <Link href="/notas" className="inline-flex items-center gap-2 font-bold text-oliva">Ver todas mis notas <ArrowRight size={16}/></Link>
+  </section>
+  <EducationBlock/>
+  <HomeAbout/>
+  <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-crema-200 bg-crema-50 p-6">
+   <div><h2 className="font-serif text-2xl">Datos para analizar</h2><p className="mt-2 text-sm text-tinta/60">Series originales del INDEC y de los mercados, con descargas para investigar.</p></div>
+   <Link href="/datos" className="inline-flex items-center gap-2 rounded-full border border-oliva px-5 py-2.5 text-sm font-bold text-oliva"><Database size={17}/> Datos y descargas <ArrowRight size={16}/></Link>
+  </section>
+ </main><Footer/></>;
 }
