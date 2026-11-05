@@ -1,6 +1,111 @@
-"use client";import{useState}from"react";import{Bar,BarChart,ResponsiveContainer,Tooltip,XAxis,YAxis,CartesianGrid,Legend,ReferenceLine}from"recharts";import SectionTitle from"./SectionTitle";
-const EMAE=[["2024-01",143.5],["2024-02",143.7],["2024-03",142.1],["2024-04",141.1],["2024-05",142.8],["2024-06",143.7],["2024-07",147.3],["2024-08",147.8],["2024-09",147.9],["2024-10",149.1],["2024-11",150.8],["2024-12",151.5],["2025-01",151.9],["2025-02",153.5],["2025-03",149.3],["2025-04",152.4],["2025-05",152.1],["2025-06",151.5],["2025-07",151.4],["2025-08",152.4],["2025-09",153.4],["2025-10",153.1],["2025-11",153],["2025-12",155.9],["2026-01",156.4],["2026-02",152.5],["2026-03",156.5],["2026-04",153.9],["2026-05",153],["2026-06",154.1]].map(([fecha,valor])=>({fecha,valor:Number(valor)}));
-const LAB=[["2024 T1",44.3,7.7],["2024 T2",44.8,7.6],["2024 T3",45,6.9],["2024 T4",45.7,6.4],["2025 T1",44.4,7.9],["2025 T2",44.5,7.6],["2025 T3",45.4,6.6],["2025 T4",45,7.5],["2026 T1",44.8,7.8],["2026 T2",45,7.9]].map(([fecha,empleo,desocupacion])=>({fecha,empleo:Number(empleo),desocupacion:Number(desocupacion)}));
-const DESEMP=[[1983,4.7],[1985,6.1],[1990,7.5],[1995,17.5],[2000,15.1],[2002,19.7],[2005,11.6],[2010,7.8],[2015,6.6],[2020,13.1],[2021,8.8],[2022,7]].map(([fecha,valor])=>({fecha:String(fecha),valor:Number(valor)}));
-const series={emae:{titulo:"Actividad económica · EMAE",sub:"Índice desestacionalizado, base 2004=100",data:EMAE,keys:[["valor","Índice"]]},labor:{titulo:"Mercado laboral",sub:"Tasas de empleo y desocupación, %",data:LAB,keys:[["empleo","Empleo"],["desocupacion","Desocupación"]]},desempleo:{titulo:"Desempleo histórico",sub:"Tasa anual, %",data:DESEMP,keys:[["valor","Desempleo"]]}} as const;
-export default function MacroDashboard(){const[k,setK]=useState<keyof typeof series>("emae");const s=series[k];return <section id="macro-series" className="rounded-3xl border border-crema-200 bg-white p-5 text-tinta shadow-sm sm:p-8"><SectionTitle title="Tablero macro" subtitle="Actividad, empleo y desempleo en una lectura visual."/ ><div className="mb-5 flex flex-wrap gap-2">{Object.entries(series).map(([id,v])=><button key={id} onClick={()=>setK(id as keyof typeof series)} className={`rounded-full border px-3 py-1.5 text-xs font-bold ${k===id?"border-oliva bg-oliva text-white":"border-oliva/35 bg-white text-oliva hover:bg-oliva-100"}`}>{v.titulo.split(" · ")[0]}</button>)}</div><div className="rounded-2xl border border-crema-200 bg-crema-50 p-5 text-tinta shadow-sm"><div className="mb-5"><h3 className="font-serif text-2xl">{s.titulo}</h3><p className="text-sm text-tinta/55">{s.sub}</p></div><div className="h-80"><ResponsiveContainer width="100%" height="100%"><BarChart data={s.data as any[]} barGap={3}><CartesianGrid vertical={false} strokeOpacity={.12}/><XAxis dataKey="fecha" minTickGap={35} tick={{fontSize:11}}/><YAxis tick={{fontSize:11}} width={55}/><Tooltip/><Legend/><ReferenceLine y={0} stroke="#999"/>{s.keys.map(([key,name],i)=><Bar key={key} dataKey={key} name={name} fill={i===0?"var(--color-oliva)":"#7b8659"} radius={[3,3,0,0]} maxBarSize={38}/>)}</BarChart></ResponsiveContainer></div><p className="mt-4 text-xs text-tinta/45">Fuente: bases históricas incorporadas a DL Mercado. Cada serie conserva su periodicidad y unidad de medida.</p></div></section>}
+"use client";
+
+import { useEffect, useState } from "react";
+import { ArrowUpRight, ChartNoAxesCombined, Info } from "lucide-react";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import SectionTitle from "./SectionTitle";
+
+type Punto = {fecha: string; valor: number};
+type Indicador = {
+  id:string;
+  titulo:string;
+  subtitulo:string;
+  unidad:string;
+  fuente:string;
+  puntos:Punto[];
+  estado:"ok"|"sin_datos";
+  aviso?:string;
+};
+type Respuesta = {indicadores:Indicador[];actualizado:string;nota:string};
+
+const categorias = [
+ {titulo:"Precios y costo de vida",sub:"Inflación y canasta básica de referencia",ids:["ipc","canasta"]},
+ {titulo:"Actividad y producción",sub:"Evolución de la economía y de la industria",ids:["emae","industria"]},
+ {titulo:"Trabajo e ingresos",sub:"Salarios y desocupación",ids:["salarios","empleo"]},
+ {titulo:"Condiciones de vida",sub:"Pobreza de las personas",ids:["pobreza"]},
+ {titulo:"Comercio exterior",sub:"Bienes exportados e importados; sus valores no se suman desde muestras parciales",ids:["expo","impo"]},
+];
+function fmt(valor:number,unidad:string){
+ return new Intl.NumberFormat("es-AR",{maximumFractionDigits:unidad==="ARS"?0:1}).format(valor);
+}
+function Tarjeta({item}:{item:Indicador}) {
+ const puntos=item.puntos||[];
+ const ultimo=puntos.at(-1);
+ const anterior=puntos.at(-2);
+ const diferencia=ultimo&&anterior&&anterior.valor!==0?(ultimo.valor-anterior.valor)/Math.abs(anterior.valor)*100:null;
+ const esTasa=item.unidad==="%";
+ return <article className="min-w-0 rounded-2xl border border-crema-200 bg-white p-5 shadow-sm sm:p-6">
+   <h4 className="font-serif text-xl leading-snug">{item.titulo}</h4>
+   <p className="mt-1 min-h-9 text-xs leading-relaxed text-tinta/60">{item.subtitulo}</p>
+   {item.estado==="ok" && ultimo ? <>
+    <div className="mt-4 flex flex-wrap items-end justify-between gap-2">
+     <div>
+      <p className="font-mono text-3xl font-semibold tabular-nums">
+       {item.unidad==="ARS"?"$ ":""}{fmt(ultimo.valor,item.unidad)}
+       {item.unidad!=="ARS" && <span className="ml-1 text-sm font-medium text-tinta/55">{item.unidad}</span>}
+      </p>
+      <p className="mt-1 text-xs text-tinta/50">Último período: {ultimo.fecha}</p>
+     </div>
+     {!esTasa && diferencia!==null && <p className="text-xs font-semibold text-tinta/60">
+      {diferencia>=0?"+":""}{fmt(diferencia,"%")}% frente al registro anterior
+     </p>}
+    </div>
+    <div className="mt-4 h-56 w-full" role="img" aria-label={`Evolución histórica de ${item.titulo}`}>
+      <ResponsiveContainer width="100%" height="100%">
+       <LineChart data={puntos} margin={{top:10,left:0,right:10,bottom:0}}>
+        <CartesianGrid stroke="#E7DECD" vertical={false} />
+        <XAxis dataKey="fecha" minTickGap={38} tick={{fontSize:10}}/>
+        <YAxis width={55} tick={{fontSize:10}} tickFormatter={(v:number)=>new Intl.NumberFormat("es-AR",{notation:"compact",maximumFractionDigits:1}).format(v)}/>
+        <Tooltip labelFormatter={(v)=>"Período: "+String(v)}
+          formatter={(v:number)=>[fmt(v,item.unidad)+(item.unidad==="%"?"%":item.unidad==="ARS"?" pesos":" "+item.unidad),item.titulo]} />
+        <Line type="monotone" dataKey="valor" stroke="#2C3A22" strokeWidth={2.5} dot={false} isAnimationActive={false}/>
+       </LineChart>
+      </ResponsiveContainer>
+    </div>
+   </>:<div className="mt-5 flex min-h-52 flex-col items-center justify-center rounded-xl bg-crema-50 px-6 py-8 text-center">
+     <Info size={20} className="text-oliva/65" />
+     <p className="mt-3 font-semibold text-sm">Dato pendiente de validación</p>
+     <p className="mt-2 max-w-xs text-xs leading-relaxed text-tinta/60">{item.aviso||"Todavía no contamos con una serie homogénea para este indicador."}</p>
+   </div>}
+   <p className="mt-4 border-t border-crema-200 pt-3 text-[11px] leading-relaxed text-tinta/50">
+     Fuente: {item.fuente} {puntos.length>0&&`· ${puntos.length} observaciones`}
+   </p>
+ </article>;
+}
+export default function MacroDashboard(){
+ const [data,setData]=useState<Respuesta|null>(null);
+ const [error,setError]=useState("");
+ const [loading,setLoading]=useState(true);
+ useEffect(()=>{
+  let activo=true;
+  fetch("/api/macro-resumen",{cache:"no-store"})
+    .then(async r=>{const json=await r.json() as Respuesta;if(!r.ok)throw new Error("No se pudo consultar el resumen macro.");return json;})
+    .then(j=>{if(activo)setData(j);})
+    .catch(e=>{if(activo)setError(e instanceof Error?e.message:"Error consultando estadísticas.");})
+    .finally(()=>{if(activo)setLoading(false);});
+  return ()=>{activo=false};
+ },[]);
+ return <section id="macro-series" className="space-y-7">
+  <div className="rounded-3xl border border-crema-200 bg-white p-6 shadow-sm sm:p-8">
+    <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[.18em] text-oliva"><ChartNoAxesCombined size={17}/> Datos macro de Argentina</p>
+    <div className="mt-2"><SectionTitle title="Tablero macro" subtitle="La economía argentina explicada con gráficos que se actualizan desde las fuentes. No necesitás elegir series, completar formularios ni hacer cálculos."/></div>
+    <p className="text-sm text-tinta/60">Inflación, canasta básica, actividad, industria, salarios, empleo, pobreza y comercio exterior.</p>
+  </div>
+  {loading&&<div className="grid gap-4 sm:grid-cols-2">{Array.from({length:4},(_,i)=><div key={i} className="h-72 animate-pulse rounded-2xl border border-crema-200 bg-white/60"/>)}</div>}
+  {error&&<p role="status" className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">{error}</p>}
+  {data && <>
+    {categorias.map(grupo=><div key={grupo.titulo}>
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
+        <div><h3 className="font-serif text-2xl text-tinta">{grupo.titulo}</h3><p className="mt-1 text-sm text-tinta/60">{grupo.sub}</p></div>
+      </div>
+      <div className="grid gap-5 lg:grid-cols-2">
+        {grupo.ids.map(id=>{const item=data.indicadores.find(i=>i.id===id);return item?<Tarjeta key={id} item={item}/>:null;})}
+      </div>
+    </div>)}
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-oliva-100 p-5 text-xs text-tinta/65">
+      <p className="max-w-xl">{data.nota} Consulta: {new Date(data.actualizado).toLocaleDateString("es-AR")}.</p>
+      <a href="/observatorio" className="inline-flex items-center gap-1 font-bold text-oliva">Consultar datos completos del INDEC <ArrowUpRight size={16}/></a>
+    </div>
+  </>}
+ </section>;
+}
