@@ -19,7 +19,7 @@ type Indicador = {
 type Respuesta = {indicadores:Indicador[];actualizado:string;nota:string};
 
 const categorias = [
- {titulo:"Precios y costo de vida",sub:"Inflación y canasta básica de referencia",ids:["ipc","canasta"]},
+ {titulo:"Precios y costo de vida",sub:"Inflación general, alimentos y canastas básicas de referencia",ids:["ipc","ipc-anual","ipc-alimentos","cba","canasta"]},
  {titulo:"Actividad y producción",sub:"Evolución de la economía y de la industria",ids:["emae","industria"]},
  {titulo:"Trabajo e ingresos",sub:"Salarios y desocupación",ids:["salarios","empleo"]},
  {titulo:"Condiciones de vida",sub:"Pobreza de las personas",ids:["pobreza"]},
