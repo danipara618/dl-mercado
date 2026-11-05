@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import {useEffect,useState} from "react";
+import {Download} from "lucide-react";
+import {descargarCSV} from "@/lib/descargarCSV";
 type Punto={fecha:string;valor:number};
 type Serie={id:string;titulo:string;unidad:string;puntos:Punto[];estado:string};
 type Response={indicadores:Serie[]};
@@ -35,8 +37,9 @@ export default function HomeHighlights(){
   })
  ];
  return <section className="space-y-5">
-  <div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-oliva">Un vistazo a la economía</p><h2 className="mt-1 font-serif text-3xl">Indicadores destacados</h2>
+  <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-oliva">Un vistazo a la economía</p><h2 className="mt-1 font-serif text-3xl">Indicadores destacados</h2>
    <p className="mt-2 text-sm text-tinta/60">Cada dato conserva su período de referencia: cotizaciones financieras y estadísticas publicadas tienen distinta frecuencia.</p></div>
+   <button type="button" onClick={()=>descargarCSV("dl-mercado-indicadores-destacados",["indicador","ultimo_valor","periodo","fuente"],items.map(x=>[x.titulo,x.valor,x.periodo,x.fuente]))} className="inline-flex items-center gap-2 rounded-full border border-oliva/40 px-4 py-2 text-xs font-bold text-oliva hover:bg-oliva-100"><Download size={16}/> Descargar resumen CSV</button></div>
   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
    {items.map((item,i)=><Link href={item.href} key={i} className="rounded-2xl border border-crema-200 bg-white p-5 shadow-sm transition hover:border-oliva/50">
     <span className="text-xs font-semibold text-tinta/55">{item.titulo}</span>
